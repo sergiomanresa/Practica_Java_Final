@@ -105,7 +105,7 @@ public class Gestor_Clientes {
         String[] dato_cliente;
         try {
             while ((linea = br.readLine()) != null) {
-                dato_cliente = linea.split(",");
+                dato_cliente = linea.split(";");
                 listado_de_clientes.add(new Cliente(dato_cliente[0], dato_cliente[1], dato_cliente[2], dato_cliente[3], dato_cliente[4], dato_cliente[5], dato_cliente[6]));
             }
             br.close();
@@ -115,7 +115,7 @@ public class Gestor_Clientes {
     }
 
 
-    public void registro_clientes() throws FormatoFechaNoValidoException, StringVacioException {
+    public void registro_clientes() throws FormatoFechaNoValidoException, StringVacioException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
         Scanner scanner=new Scanner(System.in);
 
 
@@ -213,16 +213,20 @@ public class Gestor_Clientes {
             System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
             control = scanner.nextLine();
             control = control.toUpperCase();
+            String codigo="";
             try {
-                Validaciones.primera_letra(control);
+                 codigo=Validaciones.primera_letra(control);
             } catch (StringVacioException e) {
 
                 System.out.printf(e.getMessage());
                 continue;
 
             }
-            Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni,fechanacimiento,control);
+            Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni,fechanacimiento,codigo);
+            subir_archivo();
             listado_de_clientes.add(cliente);
+            guardarRegistros();
+
 
 
             System.out.println("Para logearte necesitaras el email: "+email+"\n"+"y el codigo: "+Validaciones.primera_letra(control));
@@ -500,6 +504,46 @@ public class Gestor_Clientes {
             }
         }
     }
+
+    private void subir_archivo() throws IOException, Campos_no_válidos_Exception {
+        FileReader fr = new FileReader("Data/clientes");
+        BufferedReader br = new BufferedReader(fr);
+
+        String linea;
+        String[] registro;
+
+        while((linea=br.readLine())!=null){
+            registro = linea.split(";");
+            String dni="";
+            String email = "";
+            String control = "";
+            String nombre="";
+            String apellidos="";
+            String telefono="";
+            String fechanacimiento="";
+            listado_de_clientes.add(new Cliente(nombre,apellidos,email,telefono,dni,fechanacimiento,control));
+
+
+        }
+    }
+
+    /**
+     * Almacena el contenido del arraylist de habitaciones en la BD
+     * @throws IOException
+     * @throws ArrayHabitacionesVacioException
+     */
+    public void guardarRegistros() throws IOException, ArrayHabitacionesVacioException{
+        FileWriter fw = new FileWriter("Data/clientes", false);
+        if(listado_de_clientes.size() > 0){
+            for(Cliente c : listado_de_clientes){
+                fw.write(c.formatearObjeto());
+            }
+        } else{
+            throw new ArrayHabitacionesVacioException("No se puede guardar el listado de habitaciones (no existen habitaciones)");
+        }
+        fw.close();
+    }
+
 
 
 }

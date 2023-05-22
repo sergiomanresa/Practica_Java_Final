@@ -113,4 +113,8 @@ public class Cliente extends Usuario{
         System.out.println("Email: "+email);
         System.out.println("DNI: "+dni);
     }
+
+    public String formatearObjeto(){
+        return nombre + ";"+ apellidos + ";" + email + ";"+telefono+";"+ dni+";"+fechaNacimiento+";"+ codigoAcceso ;
+    }
 }

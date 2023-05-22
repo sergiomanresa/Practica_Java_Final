@@ -1,16 +1,16 @@
 package Practica_evaluacion;
 import Practica_evaluacion.Controllers.Gestor_Clientes;
-import Practica_evaluacion.excepcion.FormatoFechaNoValidoException;
-import Practica_evaluacion.excepcion.Numero_no_valido_Exception;
-import Practica_evaluacion.excepcion.StringVacioException;
+import Practica_evaluacion.excepcion.*;
 import Practica_evaluacion.models.Cliente;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class Main {
 
-        protected static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception {
+        protected static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
 
             //Arraylists,Hashmap y scanner
             ArrayList<Cliente> cliente =new ArrayList<>();
@@ -72,7 +72,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception {
+    public static void main(String[] args) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
 
         Scanner scanner = new Scanner(System.in);
         mostrarMenu(scanner);

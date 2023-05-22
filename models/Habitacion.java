@@ -102,7 +102,7 @@ public class Habitacion {
      * @return String con los atributos separados por ;
      */
     public String formatearObjeto(){
-        return id + ";"+ nombre + ";" + descripcion + ";" + num_camas + ";" + max_personas + ";" + precio;
+        return id + ";"+ nombre + ";" + descripcion + ";" + num_camas + ";" + max_personas + ";" + precio+"\n";
     }
 
     /**
@@ -131,6 +131,8 @@ public class Habitacion {
         habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A5", "habitacion con vistas a la montaña", 3, 5, 60.30));
         return habitaciones;
     }
+
+
 
 
     /**
