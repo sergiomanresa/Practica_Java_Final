@@ -102,7 +102,7 @@ public class Habitacion {
      * @return String con los atributos separados por ;
      */
     public String formatearObjeto(){
-        return id + ";"+ nombre + ";" + descripcion + ";" + num_camas + ";" + max_personas + ";" + precio+"\n";
+        return ";"+id + ";"+ nombre + ";" + descripcion + ";" + num_camas + ";" + max_personas + ";" + precio+"\n";
     }
 
     /**
@@ -110,13 +110,21 @@ public class Habitacion {
             * @param ids String con los ids de las habitaciones usando como separador el ;
 	 * @return ArrayList con los ID's
             */
-    public static ArrayList<Integer> getIdsListado(String ids){
+    public static ArrayList<Integer> getIdsListado(String ids) {
         ArrayList<Integer> aIds = new ArrayList<>();
-        int coma = ids.indexOf(',');
-        aIds.add(Integer.parseInt(ids.substring(0, coma)));
-        aIds.add(Integer.parseInt(ids.substring(coma+1, ids.length())));
+
+        if (ids.contains(",")) {
+            int coma = ids.indexOf(',');
+            aIds.add(Integer.parseInt(ids.substring(0, coma)));
+            aIds.add(Integer.parseInt(ids.substring(coma + 1, ids.length())));
+        } else {
+            // Manejo de caso de cadena sin coma
+            // Puedes agregar un valor predeterminado o lanzar una excepción, dependiendo de tu requerimiento
+        }
+
         return aIds;
     }
+
 
     /**
      * Genera 5 habitaciones por defecto y te las devuelve en un ArrayList

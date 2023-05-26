@@ -234,7 +234,7 @@ public class Gestor_Clientes {
         }while(true);
     }
 
-    public void login_cliente() throws FormatoFechaNoValidoException, Numero_no_valido_Exception {
+    public void login_cliente() throws FormatoFechaNoValidoException, Numero_no_valido_Exception, NumeroInvalidoException {
         String opcion="";
 
         Cliente cliente = new Cliente();
@@ -288,8 +288,8 @@ public class Gestor_Clientes {
             } else{
                 System.out.println("opción invalida");
             }
-        }while (!opcion.equals("1")&&!opcion.equals("2")&&!opcion.equals("3")&&!opcion.equals("4"));
-            if (opcionHabitacion.equals("1")) {
+        }while (caso!= '1' && caso!= '2' && caso!= '3');
+            if (caso == '1') {
                 System.out.println("***********  RESERVAR HABITACIÓN  ***********");
                 boolean todoCorrecto = true;
                 do {
@@ -353,7 +353,7 @@ public class Gestor_Clientes {
                                     System.out.println("Habitación " + h.getNombre() + " para " + h.getMax_personas());
                                     System.out.println("Habitación " + h_.getNombre() + " para " + h_.getMax_personas());
                                     nOpciones++;
-                                    precios += h.getPrecio() + "+" + h_.getPrecio();
+                                    precios += h.getPrecio()+ h_.getPrecio();
                                     System.out.println("Precio final: " + precios);
                                     opcionesHabitacion.put(opcionHabitaciones, "" + h.getId() + "," + h_.getId());
                                 }
@@ -427,7 +427,7 @@ public class Gestor_Clientes {
                         System.out.println("Bizum");
                         System.out.println("Introduce tu número de teléfono");
                         bizum = sc.nextLine();
-						if(Validaciones.telefono_valido(bizum)){
+						if(Validaciones.numerocorrecto(bizum)){
 							System.out.println("Pago realizado");
 							pagoRealizado=true;
 						}else{

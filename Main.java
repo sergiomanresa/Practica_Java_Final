@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-        protected static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+        protected static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException {
 
             //Arraylists,Hashmap y scanner
             ArrayList<Cliente> cliente =new ArrayList<>();
@@ -72,7 +72,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+    public static void main(String[] args) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException {
 
         Scanner scanner = new Scanner(System.in);
         mostrarMenu(scanner);

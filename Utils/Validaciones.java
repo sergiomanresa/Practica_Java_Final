@@ -11,34 +11,6 @@ import Practica_evaluacion.excepcion.*;
  */
 public class Validaciones {
 
-    /**
-     * Comprueba que el número de teléfono es válido mediante las siguientes comprobaciones:
-     * - El número de teléfono debe de estar compuesto por hasta 9 números
-     * - No puede estar en blanco
-     * - Debe de ser un número móvil o fijo
-     *
-     * @param telefono
-     * @return telefono válido
-     */
-    public static boolean telefono_valido(String telefono) throws FormatoFechaNoValidoException, Numero_no_valido_Exception{
-        //Eliminamos cualquier tipo de espacio existente
-        telefono = telefono.replaceAll("\\s", "");
-
-        if(telefono != null && telefono.length()==9){
-            for(int i=0; i<telefono.length(); i++){
-                if(telefono.charAt(i) < '0' ||telefono.charAt(i) > '9'){
-                    throw new FormatoFechaNoValidoException("Caracteres incorrectos");
-                }
-            }
-        }else{
-            throw new FormatoFechaNoValidoException("Error en el formato");
-        }
-        if(!(telefono.charAt(0) == '9' || telefono.charAt(0) == '8' || telefono.charAt(0) == '6' || telefono.charAt(0) == '7')) {
-            throw new Numero_no_valido_Exception("Telefono no valido");
-        }
-        return false;
-    }
-
 
     /**
      * Comprueba que el dni es válido usando las siguientes validaciones:
