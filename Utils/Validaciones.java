@@ -47,7 +47,7 @@ public class Validaciones {
     private static int[]fecha= new int[6];
 
     /**
-     * esta función se encarga de verificar la tarjeta
+     *  función que se encarga de verificar la tarjeta
      * @param tarjeta
      * @return tarjeta valida
      */
@@ -68,7 +68,7 @@ public class Validaciones {
         return (sum % 10 == 0);
     }
     /**
-     * esta función se encarga de verificar que el string no contenga nada que no sea un numero
+     *  función que se encarga de verificar que el string no contenga nada que no sea un numero
      * @param personas
      * @return un string de que contiene solo números
      */
@@ -83,7 +83,7 @@ public class Validaciones {
     }
 
     /**
-     * Esta función se encarga de saber si el email usado a la hora de iniciarse sesión sea el mismo que se usó a la hora de registrarse y pasa lo mismo
+     *  función que  se encarga de saber si el email usado a la hora de iniciarse sesión sea el mismo que se usó a la hora de registrarse y pasa lo mismo
      *     con el código de control.
      * @param email,
      * @param control,
@@ -96,7 +96,7 @@ public class Validaciones {
     }
 
     /**
-     * esta función sirve para que de error cuando dejemos en blanco el String
+     * función que  sirve para que de error cuando dejemos en blanco el String
      * @param palabra
      * @return la longitud de la palabra
      */
@@ -104,7 +104,7 @@ public class Validaciones {
     public static boolean noTieneNada(String palabra) {return palabra.length() == 0;}
 
     /**
-     * Esta función sirve para obtener el código de control
+     * función que sirve para obtener el código de control
      * @param control
      * @return el codigo
      */
@@ -145,7 +145,7 @@ public class Validaciones {
     }
 
     /**
-     * Esta funcion se encarga de comprobar si la fecha es correcta
+     *  funcion que se encarga de comprobar si la fecha es correcta
      * @param date
      * @throws FormatoFechaNoValidoException
      */
@@ -230,7 +230,7 @@ public class Validaciones {
     }
 
     /**
-     * Esta función sirve para verificar que la fecha de entrada sea menor que la de salida
+     *  función que sirve para verificar que la fecha de entrada sea menor que la de salida
      * @param fecha_entrada
      * @param fecha_salida
      * @return la fecha comparada
@@ -268,7 +268,7 @@ public class Validaciones {
     }
 
     /**
-     * esta funcion se encarga de validar la fecha de entrada
+     *  funcion que se encarga de validar la fecha de entrada
      * @param fecha_entrada
      * @return de la fecha de entrada salida correctamente
      */
@@ -375,7 +375,7 @@ public class Validaciones {
     }
 
     /**
-     * Esta función se encarga de comprobar si el nombre y el apellido sean correctos
+     * función que se encarga de comprobar si el nombre y el apellido sean correctos
      * @param frase
      * @param apellido
      * @throws StringVacioException,NombreNoValidoException
@@ -416,7 +416,7 @@ public class Validaciones {
     }
 
     /**
-     * Esta funcion verifica el correo
+     *  funcion que verifica el correo
      * @param email
      * @throws StringVacioException,EmailInvalidoException
      */
@@ -465,7 +465,7 @@ public class Validaciones {
     //comprueba que la frase está bien y lo encripta
 
     /**
-     * se encarga de verificar el número de teléfono diferenciando entre teléfono fijo o no
+     * funcion que se encarga de verificar el número de teléfono diferenciando entre teléfono fijo o no
      *
      * @param telefono
      * @return

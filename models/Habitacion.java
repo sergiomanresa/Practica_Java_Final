@@ -118,8 +118,7 @@ public class Habitacion {
             aIds.add(Integer.parseInt(ids.substring(0, coma)));
             aIds.add(Integer.parseInt(ids.substring(coma + 1, ids.length())));
         } else {
-            // Manejo de caso de cadena sin coma
-            // Puedes agregar un valor predeterminado o lanzar una excepción, dependiendo de tu requerimiento
+
         }
 
         return aIds;

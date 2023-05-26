@@ -267,7 +267,8 @@ public class Gestor_Clientes {
         if(!usuarioLogueado){
             System.out.println("No se ha encontrado ningún usuario que coincida, ¿desea seguir intentándolo?(S/N): ");
             opcion = sc.nextLine();
-            if(opcion.equals("S") || opcion.equals("s")) opcion="2";
+            if(opcion.equals("S") || opcion.equals("s"))
+            login_cliente();
             else{
                 opcion="";
                 System.out.println("Saliendo...");
@@ -373,22 +374,19 @@ public class Gestor_Clientes {
                     do {
                         System.out.println("¿Qué opción desea?");
                         opcionHabitacion = sc.nextLine();
-                        if(Validaciones.solo_numero(opcionHabitacion)){
-                            for(int opcion_ : opcionesHabitacion.keySet()){
-                                if(opcion_==Integer.parseInt(opcionHabitacion)){
-                                    System.out.println("Habitaciones a la espera del pago...");
-                                    habitacionCorrecta = true;
-                                }
-                                else{
-                                    habitacionCorrecta = false;
-                                }
+                        if (Validaciones.solo_numero(opcionHabitacion)) {
+                            int opcionSeleccionada = Integer.parseInt(opcionHabitacion);
+                            if (opcionesHabitacion.containsKey(opcionSeleccionada)) {
+                                System.out.println("Habitaciones a la espera del pago...");
+                                habitacionCorrecta = true;
                             }
-                            opcionHabitacion = habitacionCorrecta ? opcionHabitacion : "ERROR";
                         }
-                        else{
-                            opcionHabitacion="ERROR";
+
+                        if (!habitacionCorrecta) {
+                            System.out.println("Opción inválida. Intente nuevamente.");
                         }
-                    }while(opcionHabitacion.equals("ERROR"));
+                    } while (!habitacionCorrecta);
+
                 }
                 boolean pagoRealizado = false;
                 if(habitacionCorrecta){
@@ -452,9 +450,19 @@ public class Gestor_Clientes {
                         }
                     }
                     System.out.println("Precio total: "+(precioTotalReserva+precioTotalReserva*0.21));
+                    do {
+                    System.out.println("Desea hacer algo mas?:S/N");
+                    opcion= sc.nextLine();
+                    opcion=opcion.toUpperCase();
+                    }
+                    while (!opcion.equals("S")&& !opcion.equals("N"));
+                        if(opcion.equals("S")){
+                            login_cliente();
+                        }
+                        else System.out.println("Saliendo...");
                 }
             }
-            if (opcionHabitacion.equals("2")){
+            if (caso == '2'){
                 Preguntas();
             }
 
