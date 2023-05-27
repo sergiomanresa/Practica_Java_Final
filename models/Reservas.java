@@ -1,5 +1,12 @@
 package Practica_evaluacion.models;
 
+import Practica_evaluacion.excepcion.ArrayHabitacionesVacioException;
+import Practica_evaluacion.excepcion.Campos_no_válidos_Exception;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -65,7 +72,21 @@ public class Reservas {
         this.fecha_salida = fecha_salida;
     }
 
-    public static void mostrarCalendarioReservas(){
-
+    public String formatearObjeto(){
+        return cod + ";"+ id_cliente +";" + id_habitacion+";" + fecha_entrada + ";"+fecha_salida+";";
     }
+
+    public  void escribirEnArchivo(String datos) {
+        try {
+            FileWriter writer = new FileWriter("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\reservas",true);
+            writer.write(datos);
+            writer.close();
+            System.out.println("Datos de reserva escritos en el archivo.");
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo: " + e.getMessage());
+        }
+    }
+
+
+
 }

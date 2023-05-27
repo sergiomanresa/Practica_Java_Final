@@ -71,6 +71,17 @@ class ValidacionesTest {
 
         });
     }
+    @org.junit.jupiter.api.Test
+    void fecha_correcta(){
+        assertThrows(FormatoFechaNoValidoException.class,()->{
+            Validaciones.fechaCorrecta("08/01/2004");
+            Validaciones.fechaCorrecta("08-01-2004");
+            Validaciones.fechaCorrecta("08/01/2''4");
+            Validaciones.fechaCorrecta("a");
+            Validaciones.fechaCorrecta("08/01-2''4");
+        });
+    }
+
 
     @org.junit.jupiter.api.Test
     void emailcorrecto() {

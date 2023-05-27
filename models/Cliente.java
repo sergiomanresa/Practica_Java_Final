@@ -115,6 +115,6 @@ public class Cliente extends Usuario{
     }
 
     public String formatearObjeto(){
-        return nombre + ";"+ apellidos + ";" + email + ";"+telefono+";"+ dni+";"+fechaNacimiento+";"+ codigoAcceso ;
+        return nombre + ";"+ apellidos + ";" + email + ";"+telefono+";"+ dni+";"+fechaNacimiento+";"+ codigoAcceso+"\n";
     }
 }

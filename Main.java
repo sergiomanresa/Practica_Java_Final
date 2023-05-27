@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-        protected static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException {
+        public static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException {
 
             //Arraylists,Hashmap y scanner
             ArrayList<Cliente> cliente =new ArrayList<>();
@@ -41,7 +41,6 @@ public class Main {
             switch (caso) {
                 case '1':
                     gestorClientes.registro_clientes();
-
                     do {
                         System.out.println("Desea logearse?(S/N)");
                         opcion= scanner.nextLine();

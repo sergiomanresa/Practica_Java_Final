@@ -6,6 +6,7 @@ package Practica_evaluacion.Controllers;
  * @version 1.0
  * @since 11/01/2023
  */
+import Practica_evaluacion.Main;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.*;
 import Practica_evaluacion.models.Cliente;
@@ -95,7 +96,7 @@ public class Gestor_Clientes {
     private void cargar_fichero() {
         FileReader fr;
         try {
-            fr = new FileReader("data/clientes");
+            fr = new FileReader("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes");
         } catch (FileNotFoundException f) {
             f.printStackTrace();
             return;
@@ -205,7 +206,12 @@ public class Gestor_Clientes {
         do {
             System.out.println("Fecha de nacimiento (dd/mm/aaaa) o (dd-mm-aaaa):");
             fechanacimiento= scanner.nextLine();
-            Validaciones.fechaCorrecta(fechanacimiento);
+            try{
+                Validaciones.fechaCorrecta(fechanacimiento);
+            }catch (FormatoFechaNoValidoException e){
+                System.out.println(e.getMessage());
+                continue;
+            }
             break;
 
         }while (true);
@@ -234,7 +240,7 @@ public class Gestor_Clientes {
         }while(true);
     }
 
-    public void login_cliente() throws FormatoFechaNoValidoException, Numero_no_valido_Exception, NumeroInvalidoException {
+    public void login_cliente() throws  NumeroInvalidoException {
         String opcion="";
 
         Cliente cliente = new Cliente();
@@ -267,8 +273,9 @@ public class Gestor_Clientes {
         if(!usuarioLogueado){
             System.out.println("No se ha encontrado ningún usuario que coincida, ¿desea seguir intentándolo?(S/N): ");
             opcion = sc.nextLine();
-            if(opcion.equals("S") || opcion.equals("s"))
-            login_cliente();
+            if(opcion.equals("S") || opcion.equals("s")){
+                login_cliente();
+            }
             else{
                 opcion="";
                 System.out.println("Saliendo...");
@@ -374,19 +381,22 @@ public class Gestor_Clientes {
                     do {
                         System.out.println("¿Qué opción desea?");
                         opcionHabitacion = sc.nextLine();
-                        if (Validaciones.solo_numero(opcionHabitacion)) {
-                            int opcionSeleccionada = Integer.parseInt(opcionHabitacion);
-                            if (opcionesHabitacion.containsKey(opcionSeleccionada)) {
-                                System.out.println("Habitaciones a la espera del pago...");
-                                habitacionCorrecta = true;
+                        if(Validaciones.solo_numero(opcionHabitacion)){
+                            for(int opcion_ : opcionesHabitacion.keySet()){
+                                if(opcion_==Integer.parseInt(opcionHabitacion)){
+                                    System.out.println("Habitaciones a la espera del pago...");
+                                    habitacionCorrecta = true;
+                                }
+                                else{
+                                    habitacionCorrecta = false;
+                                }
                             }
+                            opcionHabitacion = habitacionCorrecta ? opcionHabitacion : "ERROR";
                         }
-
-                        if (!habitacionCorrecta) {
-                            System.out.println("Opción inválida. Intente nuevamente.");
+                        else{
+                            opcionHabitacion="ERROR";
                         }
-                    } while (!habitacionCorrecta);
-
+                    }while(opcionHabitacion.equals("ERROR"));
                 }
                 boolean pagoRealizado = false;
                 if(habitacionCorrecta){
@@ -435,6 +445,9 @@ public class Gestor_Clientes {
                 }
                 if(pagoRealizado){
                     Reservas reserva = new Reservas((int)(Math.random()*1000+1), cliente.getDni(), Habitacion.getIdsListado(opcionesHabitacion.get(Integer.parseInt(opcionHabitacion))), fechaEntrada, fechaSalida);
+                    reserva.escribirEnArchivo(reserva.formatearObjeto());
+
+
                     cliente.infoBasica();
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                     LocalDateTime now = LocalDateTime.now();
@@ -450,23 +463,18 @@ public class Gestor_Clientes {
                         }
                     }
                     System.out.println("Precio total: "+(precioTotalReserva+precioTotalReserva*0.21));
-                    do {
-                    System.out.println("Desea hacer algo mas?:S/N");
-                    opcion= sc.nextLine();
-                    opcion=opcion.toUpperCase();
-                    }
-                    while (!opcion.equals("S")&& !opcion.equals("N"));
-                        if(opcion.equals("S")){
-                            login_cliente();
-                        }
-                        else System.out.println("Saliendo...");
                 }
-            }
-            if (caso == '2'){
-                Preguntas();
-            }
+                System.out.println("quieres hacer alguna pregunta?:(S/N)");
+                opcion = sc.nextLine();
+                if (opcion.equals("S")){
+                    Preguntas();
 
+                }
+                else;
+
+            }
     }}
+
 
 
     public void Preguntas(){
@@ -514,7 +522,8 @@ public class Gestor_Clientes {
     }
 
     private void subir_archivo() throws IOException, Campos_no_válidos_Exception {
-        FileReader fr = new FileReader("Data/clientes");
+        //todo cambiar la ruta
+        FileReader fr = new FileReader("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes");
         BufferedReader br = new BufferedReader(fr);
 
         String linea;
@@ -541,7 +550,8 @@ public class Gestor_Clientes {
      * @throws ArrayHabitacionesVacioException
      */
     public void guardarRegistros() throws IOException, ArrayHabitacionesVacioException{
-        FileWriter fw = new FileWriter("Data/clientes", false);
+        //todo cambiar la ruta
+        FileWriter fw = new FileWriter("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes", false);
         if(listado_de_clientes.size() > 0){
             for(Cliente c : listado_de_clientes){
                 fw.write(c.formatearObjeto());
