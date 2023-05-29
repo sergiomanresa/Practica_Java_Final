@@ -9,6 +9,7 @@ package Practica_evaluacion.Controllers;
 import Practica_evaluacion.Main;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.*;
+import Practica_evaluacion.models.Administrador;
 import Practica_evaluacion.models.Cliente;
 import Practica_evaluacion.models.Habitacion;
 import Practica_evaluacion.models.Reservas;
@@ -18,7 +19,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
+
+import static Practica_evaluacion.models.Administrador.agregarAdministrador;
 
 public class Gestor_Clientes {
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
@@ -561,6 +565,55 @@ public class Gestor_Clientes {
         }
         fw.close();
     }
+    public void registrarAdministrador(List<Administrador> listadoAdministradores) throws EmailInvalidoException, StringVacioException {
+        String password="";
+        String email="";
+        String nombreUsuario="";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("------ REGISTRAR ADMINISTRADOR ------");
+        do {
+
+            System.out.print("Nombre de usuario: ");
+            nombreUsuario = scanner.nextLine();
+            try {
+                Validaciones.nombrecorrecto(nombreUsuario,false);
+            }catch (StringVacioException| NombreNoValidoException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
+
+        do {
+            System.out.print("La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un dígito (logitud (8-20)): ");
+             password = scanner.nextLine();
+        } while (!Validaciones.validarContrasena(password));
+
+        do {
+            System.out.print("Correo electrónico: ");
+             email = scanner.nextLine();
+             try{
+                 Validaciones.emailcorrecto(email);
+             }catch (EmailInvalidoException e){
+                 System.out.println(e.getMessage());
+                 continue;
+             }
+                break;
+        }while (true);
+
+
+
+
+        Administrador nuevoAdministrador = new Administrador(nombreUsuario, password, email, true);
+        agregarAdministrador(nuevoAdministrador, listadoAdministradores);
+        nuevoAdministrador.guardarAdministradoresEnArchivo(listadoAdministradores);
+
+        System.out.println("Administrador registrado con éxito.");
+    }
+
+
+
+
 
 
 

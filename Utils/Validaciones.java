@@ -10,6 +10,40 @@ import Practica_evaluacion.excepcion.*;
  * @since 11/01/2023
  */
 public class Validaciones {
+        private static final int MIN_LENGTH = 8;
+        private static final int MAX_LENGTH = 20;
+
+        /**
+         * Valida una contraseña verificando su longitud y contenido.
+         *
+         * @param contrasena La contraseña a validar.
+         * @return {@code true} si la contraseña es válida, {@code false} si es inválida.
+         */
+        public static boolean validarContrasena(String contrasena) {
+            // Verificar longitud de la contraseña
+            if (contrasena == null || contrasena.length() < MIN_LENGTH || contrasena.length() > MAX_LENGTH) {
+                return false;
+            }
+
+            boolean tieneLetraMayuscula = false;
+            boolean tieneLetraMinuscula = false;
+            boolean tieneDigito = false;
+
+            // Verificar contenido de la contraseña
+            for (char caracter : contrasena.toCharArray()) {
+                if (Character.isUpperCase(caracter)) {
+                    tieneLetraMayuscula = true;
+                } else if (Character.isLowerCase(caracter)) {
+                    tieneLetraMinuscula = true;
+                } else if (Character.isDigit(caracter)) {
+                    tieneDigito = true;
+                }
+            }
+
+            // La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un dígito
+            return tieneLetraMayuscula && tieneLetraMinuscula && tieneDigito;
+        }
+
 
 
     /**

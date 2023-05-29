@@ -1,53 +1,50 @@
 package Practica_evaluacion.models;
 
 public class Usuario {
+    private String nombreUsuario;
+    private String password;
+    private String email;
+    private boolean rol;
 
-    public class usuario {
-        private String nombreUsuario;
-        private String password;
-        private String email;
-        private boolean rol;
+    public Usuario() {
+    }
 
+    public Usuario(String nombreUsuario, String password, String email, boolean rol) {
+        this.nombreUsuario = nombreUsuario;
+        this.password = password;
+        this.email = email;
+        this.rol = rol;
+    }
 
-        usuario(){}
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
 
-        public usuario(String nombreUsuario, String password, String email, boolean rol) {
-            this.nombreUsuario = nombreUsuario;
-            this.password = password;
-            this.email = email;
-            this.rol = rol;
-        }
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
 
-        public String getNombreUsuario() {
-            return nombreUsuario;
-        }
+    public String getPassword() {
+        return password;
+    }
 
-        public void setNombreUsuario(String nombreUsuario) {
-            this.nombreUsuario = nombreUsuario;
-        }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-        public String getPassword() {
-            return password;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public void setPassword(String password) {
-            this.password = password;
-        }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-        public String getEmail() {
-            return email;
-        }
+    public boolean isRol() {
+        return rol;
+    }
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public boolean isRol() {
-            return rol;
-        }
-
-        public void setRol(boolean rol) {
-            this.rol = rol;
-        }
+    public void setRol(boolean rol) {
+        this.rol = rol;
     }
 }
