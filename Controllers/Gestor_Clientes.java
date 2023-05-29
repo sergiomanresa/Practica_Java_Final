@@ -17,10 +17,7 @@ import Practica_evaluacion.models.Reservas;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static Practica_evaluacion.models.Administrador.agregarAdministrador;
 
@@ -100,7 +97,7 @@ public class Gestor_Clientes {
     private void cargar_fichero() {
         FileReader fr;
         try {
-            fr = new FileReader("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes");
+            fr = new FileReader("data/Clientes");
         } catch (FileNotFoundException f) {
             f.printStackTrace();
             return;
@@ -271,7 +268,6 @@ public class Gestor_Clientes {
             if(c.getEmail().equals(email_usuario) && c.getCodigoAcceso().equals(codigo_usuario)){
                 System.out.println("Bienvenido, "+c.getNombre());
                 usuarioLogueado=true;
-                opcion="";
             }
         }
         if(!usuarioLogueado){
@@ -527,7 +523,7 @@ public class Gestor_Clientes {
 
     private void subir_archivo() throws IOException, Campos_no_válidos_Exception {
         //todo cambiar la ruta
-        FileReader fr = new FileReader("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes");
+        FileReader fr = new FileReader("data/Clientes");
         BufferedReader br = new BufferedReader(fr);
 
         String linea;
@@ -555,7 +551,7 @@ public class Gestor_Clientes {
      */
     public void guardarRegistros() throws IOException, ArrayHabitacionesVacioException{
         //todo cambiar la ruta
-        FileWriter fw = new FileWriter("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\clientes", false);
+        FileWriter fw = new FileWriter("data/Cliente", false);
         if(listado_de_clientes.size() > 0){
             for(Cliente c : listado_de_clientes){
                 fw.write(c.formatearObjeto());
@@ -569,6 +565,7 @@ public class Gestor_Clientes {
         String password="";
         String email="";
         String nombreUsuario="";
+        String opcion="";
         Scanner scanner = new Scanner(System.in);
         System.out.println("------ REGISTRAR ADMINISTRADOR ------");
         do {
@@ -600,16 +597,285 @@ public class Gestor_Clientes {
              }
                 break;
         }while (true);
-
-
-
-
         Administrador nuevoAdministrador = new Administrador(nombreUsuario, password, email, true);
         agregarAdministrador(nuevoAdministrador, listadoAdministradores);
         nuevoAdministrador.guardarAdministradoresEnArchivo(listadoAdministradores);
 
         System.out.println("Administrador registrado con éxito.");
+        System.out.println("Quieres acceder a la gestion de los clientes(S/N)");
+        opcion=scanner.nextLine();
+        opcion=opcion.toUpperCase();
+        if (opcion.equals("S")){
+            try {
+                menu_Administrador();
+            } catch (FormatoFechaNoValidoException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ArrayHabitacionesVacioException e) {
+                throw new RuntimeException(e);
+            } catch (Campos_no_válidos_Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
+    public void menu_Administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+        Scanner scanner = new Scanner(System.in);
+        String opcion="";
+        char caso = ' ';
+        System.out.println("------ Menu de gestión de clientes ------");
+        System.out.println("1. Agregar cliente");
+        System.out.println("2. Consultar cliente");
+        System.out.println("3. Actualizar cliente");
+        System.out.println("4. Eliminar cliente");
+        System.out.println("5. Regresar al menú anterior");
+        System.out.println("Elige una option:");
+        opcion = scanner.nextLine();
+        if (opcion.length() == 1)
+            caso = opcion.charAt(0);
+        else {
+            System.out.println("Opción inválida");
+        }
+        switch (caso){
+            case '1':
+                registro_clientes();
+                menu_Administrador();
+                break;
+            case '2':
+                buscar_cliente(false);
+                menu_Administrador();
+                break;
+            case '3':
+                buscar_cliente(true);
+                menu_Administrador();
+                break;
+            case '4':
+                eliminar_cliente();
+                menu_Administrador();
+                break;
+            case '5':
+                Main.mostrarMenu(scanner);
+        }
+    }
+
+    /**
+     * Metodo para imprimir los datos de un cliente
+     * El boolean sirve para permitir actualizar un cliente (true) o solo visualizarlo (false)
+     * @param editar
+     */
+    public void buscar_cliente(boolean editar){
+        File file = new File("data/Clientes");
+        String email="";
+        String codigo="";
+        Scanner scanner=new Scanner(System.in);
+        System.out.println("------ Menu de búsqueda de clientes ------");
+        System.out.println("Dime el email:");
+        do {
+            System.out.println("email:");
+            email=scanner.nextLine();
+
+            try{
+                Validaciones.emailcorrecto(email);
+            }catch (EmailInvalidoException | StringVacioException e){
+                System.out.printf(e.getMessage());
+                continue;
+            }
+            break;
+        }while (true);
+        System.out.println("Dime el codigo de acceso:");
+        codigo=scanner.nextLine();
+
+        ArrayList<Cliente> clientes = getListado_de_clientes();
+
+        for(Cliente c : clientes){
+            if(c.getEmail().equals(email) && c.getCodigoAcceso().equals(codigo)){
+                if (editar=false) {
+                    System.out.println("Usuario:"+c.getNombre());
+                    System.out.println("apellidos:"+c.getApellidos());
+                    System.out.println("email:"+c.getEmail());
+                    System.out.println("telefono:"+c.getTelefono());
+                    System.out.println("dni:"+c.getDni());
+                    System.out.println("fecha de nacimiento:"+c.getFechaNacimiento());
+                    System.out.println("codigo de acceso:"+c.getCodigoAcceso());
+                } else if (editar=true) {
+                    //variables
+                    String dni="";
+                    String control = "";
+                    String nombre="";
+                    String apellidos="";
+                    String telefono="";
+                    String fechanacimiento="";
+
+                    System.out.println("------ Menu de edición de clientes ------");
+                    do {
+                        System.out.println("DNI:");
+                        dni=scanner.nextLine();
+                        dni=dni.toUpperCase();
+
+                        try{
+                            Validaciones.dni(dni);
+                            c.setDni(dni);
+                        }catch (Formato_dni_Exception e){
+                            System.out.printf(e.getMessage());
+                            continue;
+                        }
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Nombre:");
+                        nombre=scanner.nextLine();
+                        nombre=nombre.toUpperCase();
+
+                        try {
+                            Validaciones.nombrecorrecto(nombre,false);
+                            c.setNombre(nombre);
+                        }catch (StringVacioException| NombreNoValidoException e){
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        break;
+
+                    }while (true);
+
+                    do {
+                        System.out.println("Apellidos:");
+                        apellidos= scanner.nextLine();
+                        apellidos=apellidos.toUpperCase();
+
+                        try {
+                            Validaciones.nombrecorrecto(apellidos,true);
+                            c.setApellidos(apellidos);
+                        } catch (StringVacioException | NombreNoValidoException e) {
+                            System.out.printf(e.getMessage());
+                            continue;
+                        }
+                        break;
+                    }while (true);
+
+                    do {
+                        System.out.println("Email:");
+                        email= scanner.nextLine();
+
+                        try {
+                            Validaciones.emailcorrecto(email);
+                            c.setEmail(email);
+                        } catch (StringVacioException | EmailInvalidoException e){
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Teléfono:");
+                        telefono= scanner.nextLine();
+                        try{
+                            Validaciones.numerocorrecto(telefono);
+                            c.setTelefono(telefono);
+                        } catch (NumeroInvalidoException e){
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Fecha de nacimiento (dd/mm/aaaa) o (dd-mm-aaaa):");
+                        fechanacimiento= scanner.nextLine();
+                        try{
+                            Validaciones.fechaCorrecta(fechanacimiento);
+                            c.setFechaNacimiento(fechanacimiento);
+                        }catch (FormatoFechaNoValidoException e){
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                        break;
+
+                    }while (true);
+                    do {
+                        System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
+                        control = scanner.nextLine();
+                        control = control.toUpperCase();
+                        codigo="";
+                        try {
+                            codigo=Validaciones.primera_letra(control);
+                            c.setCodigoAcceso(control);
+                        } catch (StringVacioException e) {
+
+                            System.out.println(e.getMessage());
+                            continue;
+                        }
+                    }while (true);
+
+                }
+                try {
+                    menu_Administrador();
+                } catch (StringVacioException e) {
+                    throw new RuntimeException(e);
+                } catch (FormatoFechaNoValidoException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ArrayHabitacionesVacioException e) {
+                    throw new RuntimeException(e);
+                } catch (Campos_no_válidos_Exception e) {
+                    throw new RuntimeException(e);
+                }
+                }
+
+            }
+        }
+    public void eliminar_cliente() {
+        Scanner scanner = new Scanner(System.in);
+        File file = new File("data/Clientes");
+        String email = "";
+        String codigo = "";
+        String opcion = "";
+        boolean usuario_existente = false;
+
+        System.out.print("Ingrese el email: ");
+        do {
+            email = scanner.nextLine();
+
+            try {
+                Validaciones.emailcorrecto(email);
+            } catch (EmailInvalidoException | StringVacioException e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
+            break;
+        } while (true);
+
+        System.out.print("Ingrese el código de acceso: ");
+        codigo = scanner.nextLine();
+
+        ArrayList<Cliente> clientes = getListado_de_clientes();
+        Iterator<Cliente> iterator = clientes.iterator();
+        while (iterator.hasNext()) {
+            Cliente c = iterator.next();
+            if (c.getEmail().equals(email) && c.getCodigoAcceso().equals(codigo)) {
+                System.out.println("adios, " + c.getNombre());
+                iterator.remove(); // Eliminar el cliente de la lista
+                usuario_existente = true;
+                break;
+            }
+        }
+
+        if (!usuario_existente) {
+            System.out.print("No se ha encontrado ningún usuario que coincida, ¿desea seguir intentándolo? (S/N): ");
+            opcion = scanner.nextLine();
+            if (opcion.equalsIgnoreCase("S")) {
+                eliminar_cliente();
+            } else {
+                System.out.println("Saliendo...");
+            }
+        }
+        // Guardar la lista actualizada de clientes en el archivo
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            outputStream.writeObject(clientes);
+        } catch (IOException e) {
+            System.out.println("Error al guardar los cambios en el archivo.");
+        }
+    }
+
 
 
 

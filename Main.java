@@ -11,8 +11,7 @@ import java.util.Scanner;
 
 
 public class Main {
-
-        public static void mostrarMenu(Scanner scanner) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException, EmailInvalidoException {
+        public static void mostrarMenu(Scanner scanner){
 
             //Arraylists,Hashmap y scanner
             ArrayList<Cliente> cliente =new ArrayList<>();
@@ -30,6 +29,7 @@ public class Main {
             System.out.println("1. Registro usuario");
             System.out.println("2. Login usuario");
             System.out.println("3. Registro administrador");
+            System.out.println("4. menu gestion");
             System.out.println("0. Salir");
             System.out.println("Opción en número:");
 
@@ -44,24 +44,64 @@ public class Main {
 
             switch (caso) {
                 case '1':
-                    gestorClientes.registro_clientes();
+                    try {
+                        gestorClientes.registro_clientes();
+                    } catch (FormatoFechaNoValidoException e) {
+                        throw new RuntimeException(e);
+                    } catch (StringVacioException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (ArrayHabitacionesVacioException e) {
+                        throw new RuntimeException(e);
+                    } catch (Campos_no_válidos_Exception e) {
+                        throw new RuntimeException(e);
+                    }
                     do {
                         System.out.println("Desea logearse?(S/N)");
                         opcion= scanner.nextLine();
                         opcion=opcion.toUpperCase();
                     }while (!opcion.equals("S")&& !opcion.equals("N"));
                     if(opcion.equals("S")){
-                        gestorClientes.login_cliente();
+                        try {
+                            gestorClientes.login_cliente();
+                        } catch (NumeroInvalidoException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     else System.out.println("Saliendo...");
 
                     break;
                 case '2':
-                    gestorClientes.login_cliente();
+                    try {
+                        gestorClientes.login_cliente();
+                    } catch (NumeroInvalidoException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case '3':
-                    gestorClientes.registrarAdministrador(administrador);
+                    try {
+                        gestorClientes.registrarAdministrador(administrador);
+                    } catch (EmailInvalidoException e) {
+                        throw new RuntimeException(e);
+                    } catch (StringVacioException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
+                case '4':
+                    try {
+                        gestorClientes.menu_Administrador();
+                    } catch (StringVacioException e) {
+                        throw new RuntimeException(e);
+                    } catch (FormatoFechaNoValidoException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (ArrayHabitacionesVacioException e) {
+                        throw new RuntimeException(e);
+                    } catch (Campos_no_válidos_Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 case '0':
                     System.out.println("Saliendo...");
                     return;
@@ -78,10 +118,8 @@ public class Main {
 
 
 
-    public static void main(String[] args) throws StringVacioException, FormatoFechaNoValidoException, Numero_no_valido_Exception, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception, NumeroInvalidoException, EmailInvalidoException {
-
+    public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
         mostrarMenu(scanner);
-
         }
     }

@@ -480,8 +480,10 @@ public class Validaciones {
             throw new EmailInvalidoException("No se acepta ese formato de correo");
         }
 
-        if(email.charAt(pos_a+1)=='.')
-            throw new EmailInvalidoException("Formato no valido");
+        // Verificar si el carácter después del símbolo '@' es un punto
+        if (pos_a >= 0 && pos_a + 1 < email.length() && email.charAt(pos_a + 1) == '.') {
+            throw new EmailInvalidoException("Formato no válido");
+        }
 //aquí nos aseguramos de que el punto no sea el primero
         String subEmail = email.substring(pos_a);
         if(subEmail.indexOf('.')==-1){

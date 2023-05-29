@@ -93,6 +93,7 @@ class ValidacionesTest {
             Validaciones.emailcorrecto("a@a.mes");
             Validaciones.emailcorrecto("a@e@a.es");
             Validaciones.emailcorrecto("a @a.es");
+            Validaciones.emailcorrecto("a@");
         });
     }
 

@@ -20,7 +20,7 @@ public class Administrador extends Usuario {
         this.activo = activo;
     }
 
-    public static final String ARCHIVO_ADMINISTRADORES = "C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\Administradores";
+    public static final String ARCHIVO_ADMINISTRADORES = "data/Administrador";
 
     // Agregar nuevoAdministrador al listado de administradores
     public static void agregarAdministrador(Administrador nuevoAdministrador, List<Administrador> listadoAdministradores) {
