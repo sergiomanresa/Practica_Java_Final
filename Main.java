@@ -67,6 +67,10 @@ public class Main {
                             gestorClientes.login_cliente();
                         } catch (NumeroInvalidoException e) {
                             throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (Campos_no_válidos_Exception e) {
+                            throw new RuntimeException(e);
                         }
                     }
                     else System.out.println("Saliendo...");
@@ -76,6 +80,10 @@ public class Main {
                     try {
                         gestorClientes.login_cliente();
                     } catch (NumeroInvalidoException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (Campos_no_válidos_Exception e) {
                         throw new RuntimeException(e);
                     }
                     break;

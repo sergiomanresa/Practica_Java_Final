@@ -25,7 +25,7 @@ public class Gestor_Clientes {
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
 
     public Gestor_Clientes() {
-        agregarCliente(new Cliente());
+
     }
 
     public Gestor_Clientes(ArrayList<Cliente> listado_de_clientes){
@@ -91,9 +91,6 @@ public class Gestor_Clientes {
 
     }
 
-    /**
-     * Carga el fichero del cliente en el gestor
-     */
     public void guardarClientesEnArchivo( ArrayList<Cliente> listado_de_clientes) {
         try (FileWriter writer = new FileWriter("data/Cliente",true)) {
             for (Cliente cliente : listado_de_clientes) {
@@ -221,43 +218,35 @@ public class Gestor_Clientes {
             }
             Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni,fechanacimiento,codigo);
             cliente.formatearObjeto();
-            cliente.agregarCliente(cliente,listado_de_clientes);
+            listado_de_clientes.add(cliente);
             guardarClientesEnArchivo(listado_de_clientes);
-
-
-
-
             System.out.println("Para logearte necesitaras el email: "+email+"\n"+"y el codigo: "+Validaciones.primera_letra(control));
             break;
         }while(true);
     }
 
-    public void login_cliente() throws NumeroInvalidoException {
+    public void login_cliente() throws NumeroInvalidoException, IOException, Campos_no_válidos_Exception {
         String opcion = "";
-
         Cliente cliente = new Cliente();
         char caso = ' ';
         boolean usuarioLogueado = false;
         Scanner sc = new Scanner(System.in);
-        Gestor_Clientes gc = new Gestor_Clientes();
 
         System.out.println("Dime tu email de usuario:");
         String email_usuario = sc.nextLine();
         System.out.println("Dime tu código:");
         String codigo_usuario = sc.nextLine();
+        cargar_archivo();
 
-        ArrayList<Cliente> clientes = getListado_de_clientes();
-
-        for (Cliente cliente_ : clientes) {
+        for (Cliente cliente_ : listado_de_clientes) {
             if (email_usuario.equals(cliente_.getEmail()) && codigo_usuario.equals(cliente_.getCodigoAcceso())) {
-                cliente = cliente_;
                 usuarioLogueado = true;
                 break;
             }
         }
 
-        if (usuarioLogueado && cliente != null) {
-            System.out.println("Bienvenido, " + cliente.getNombre());
+        if (usuarioLogueado) {
+            System.out.println("Bienvenido");
         } else {
             System.out.println("No se ha encontrado ningún usuario que coincida.");
             System.out.println("¿Desea seguir intentándolo? (S/N):");
@@ -509,23 +498,23 @@ public class Gestor_Clientes {
         }
     }
 
-    private void subir_archivo() throws IOException, Campos_no_válidos_Exception {
-        //todo cambiar la ruta
-        FileReader fr = new FileReader("data/Clientes");
+    private void cargar_archivo() throws IOException, Campos_no_válidos_Exception {
+        FileReader fr = new FileReader("data/Cliente");
         BufferedReader br = new BufferedReader(fr);
 
         String linea;
         String[] registro;
 
         while((linea=br.readLine())!=null){
-            registro = linea.split(";");
-            String dni="";
-            String email = "";
-            String control = "";
-            String nombre="";
-            String apellidos="";
-            String telefono="";
-            String fechanacimiento="";
+            registro = linea.split(",");
+            String nombre=registro[0];
+            String apellidos=registro[1];
+            String email = registro[2];
+            String telefono=registro[3];
+            String dni=registro[4];
+            String fechanacimiento=registro[5];
+            String control = registro[6];
+
             listado_de_clientes.add(new Cliente(nombre,apellidos,email,telefono,dni,fechanacimiento,control));
 
 
