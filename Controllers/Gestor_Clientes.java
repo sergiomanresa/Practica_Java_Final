@@ -25,15 +25,15 @@ public class Gestor_Clientes {
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
 
     public Gestor_Clientes() {
-            cargar_fichero();
+        agregarCliente(new Cliente());
     }
 
     public Gestor_Clientes(ArrayList<Cliente> listado_de_clientes){
-        listado_de_clientes = listado_de_clientes;
+        this.listado_de_clientes = listado_de_clientes;
     }
 
     public void setListado_de_clientes(ArrayList<Cliente> listado_de_clientes) {
-        listado_de_clientes = listado_de_clientes;
+        this.listado_de_clientes = listado_de_clientes;
     }
 
     public ArrayList<Cliente> getListado_de_clientes() {
@@ -94,25 +94,15 @@ public class Gestor_Clientes {
     /**
      * Carga el fichero del cliente en el gestor
      */
-    private void cargar_fichero() {
-        FileReader fr;
-        try {
-            fr = new FileReader("data/Clientes");
-        } catch (FileNotFoundException f) {
-            f.printStackTrace();
-            return;
-        }
-        BufferedReader br = new BufferedReader(fr);
-        String linea = "";
-        String[] dato_cliente;
-        try {
-            while ((linea = br.readLine()) != null) {
-                dato_cliente = linea.split(";");
-                listado_de_clientes.add(new Cliente(dato_cliente[0], dato_cliente[1], dato_cliente[2], dato_cliente[3], dato_cliente[4], dato_cliente[5], dato_cliente[6]));
+    public void guardarClientesEnArchivo( ArrayList<Cliente> listado_de_clientes) {
+        try (FileWriter writer = new FileWriter("data/Cliente",true)) {
+            for (Cliente cliente : listado_de_clientes) {
+                String linea = cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getEmail() + "," + cliente.getTelefono() + ","+ cliente.getDni()+","+cliente.getFechaNacimiento()+","+ cliente.getCodigoAcceso();
+                writer.write(linea);
+                writer.write(System.lineSeparator());
             }
-            br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error al guardar los administradores en el archivo.");
         }
     }
 
@@ -230,9 +220,10 @@ public class Gestor_Clientes {
 
             }
             Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni,fechanacimiento,codigo);
-            subir_archivo();
-            listado_de_clientes.add(cliente);
-            guardarRegistros();
+            cliente.formatearObjeto();
+            cliente.agregarCliente(cliente,listado_de_clientes);
+            guardarClientesEnArchivo(listado_de_clientes);
+
 
 
 
@@ -241,49 +232,46 @@ public class Gestor_Clientes {
         }while(true);
     }
 
-    public void login_cliente() throws  NumeroInvalidoException {
-        String opcion="";
+    public void login_cliente() throws NumeroInvalidoException {
+        String opcion = "";
 
         Cliente cliente = new Cliente();
         char caso = ' ';
-        boolean usuarioLogueado=false;
+        boolean usuarioLogueado = false;
         Scanner sc = new Scanner(System.in);
         Gestor_Clientes gc = new Gestor_Clientes();
-        gc.generarClientesBase();
-
 
         System.out.println("Dime tu email de usuario:");
         String email_usuario = sc.nextLine();
         System.out.println("Dime tu código:");
-        String codigo_usuario= sc.nextLine();
+        String codigo_usuario = sc.nextLine();
 
         ArrayList<Cliente> clientes = getListado_de_clientes();
 
-        for(Cliente cliente_ : clientes){
-            if(cliente_.getEmail().equals(email_usuario) && cliente_.getCodigoAcceso().equals(codigo_usuario)){
+        for (Cliente cliente_ : clientes) {
+            if (email_usuario.equals(cliente_.getEmail()) && codigo_usuario.equals(cliente_.getCodigoAcceso())) {
                 cliente = cliente_;
+                usuarioLogueado = true;
+                break;
             }
         }
-        for(Cliente c : clientes){
-            if(c.getEmail().equals(email_usuario) && c.getCodigoAcceso().equals(codigo_usuario)){
-                System.out.println("Bienvenido, "+c.getNombre());
-                usuarioLogueado=true;
-            }
-        }
-        if(!usuarioLogueado){
-            System.out.println("No se ha encontrado ningún usuario que coincida, ¿desea seguir intentándolo?(S/N): ");
+
+        if (usuarioLogueado && cliente != null) {
+            System.out.println("Bienvenido, " + cliente.getNombre());
+        } else {
+            System.out.println("No se ha encontrado ningún usuario que coincida.");
+            System.out.println("¿Desea seguir intentándolo? (S/N):");
             opcion = sc.nextLine();
-            if(opcion.equals("S") || opcion.equals("s")){
+            if (opcion.equalsIgnoreCase("S")) {
                 login_cliente();
-            }
-            else{
-                opcion="";
+            } else {
                 System.out.println("Saliendo...");
+                return;
             }
         }
-		if(usuarioLogueado) {
+        if(usuarioLogueado) {
         String personasReserva = "", fechaEntrada = "", fechaSalida = "";
-        String opcionHabitacion = "";
+        String opcionHabitacion = ""; caso = ' ';
         do {
             System.out.printf("*****Bienvenido a muñon dreams*******\n");
             System.out.printf("\n1. Reserva de habitación");

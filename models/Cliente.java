@@ -1,5 +1,8 @@
 package Practica_evaluacion.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase para los clientes
  *
@@ -116,5 +119,9 @@ public class Cliente extends Usuario{
 
     public String formatearObjeto(){
         return nombre + ";"+ apellidos + ";" + email + ";"+telefono+";"+ dni+";"+fechaNacimiento+";"+ codigoAcceso+"\n";
+    }
+
+    public void agregarCliente(Cliente nuevoCliente, ArrayList<Cliente> clienteList) {
+        clienteList.add(nuevoCliente);
     }
 }
