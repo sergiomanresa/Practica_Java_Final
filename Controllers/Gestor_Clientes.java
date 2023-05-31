@@ -9,6 +9,7 @@ package Practica_evaluacion.Controllers;
 import Practica_evaluacion.Main;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.*;
+import Practica_evaluacion.interfaces.disponibilidad_de_habitaciones;
 import Practica_evaluacion.models.Administrador;
 import Practica_evaluacion.models.Cliente;
 import Practica_evaluacion.models.Habitacion;
@@ -21,7 +22,7 @@ import java.util.*;
 
 import static Practica_evaluacion.models.Administrador.agregarAdministrador;
 
-public class Gestor_Clientes {
+public class Gestor_Clientes implements disponibilidad_de_habitaciones {
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
 
     public Gestor_Clientes() {
@@ -640,7 +641,7 @@ public class Gestor_Clientes {
      * El boolean sirve para permitir actualizar un cliente (true) o solo visualizarlo (false)
      * @param editar
      */
-    public void buscar_cliente(boolean editar){
+    public void buscar_cliente(boolean editar) throws IOException, Campos_no_válidos_Exception {
         File file = new File("data/Clientes");
         String email="";
         String codigo="";
@@ -661,12 +662,12 @@ public class Gestor_Clientes {
         }while (true);
         System.out.println("Dime el codigo de acceso:");
         codigo=scanner.nextLine();
+        cargar_archivo();
 
-        ArrayList<Cliente> clientes = getListado_de_clientes();
-
-        for(Cliente c : clientes){
+        for(Cliente c : listado_de_clientes){
             if(c.getEmail().equals(email) && c.getCodigoAcceso().equals(codigo)){
-                if (editar=false) {
+                if (!editar) {
+                    System.out.println("------ Datos de "+c.getNombre()+ "------");
                     System.out.println("Usuario:"+c.getNombre());
                     System.out.println("apellidos:"+c.getApellidos());
                     System.out.println("email:"+c.getEmail());
@@ -674,7 +675,7 @@ public class Gestor_Clientes {
                     System.out.println("dni:"+c.getDni());
                     System.out.println("fecha de nacimiento:"+c.getFechaNacimiento());
                     System.out.println("codigo de acceso:"+c.getCodigoAcceso());
-                } else if (editar=true) {
+                }else{
                     //variables
                     String dni="";
                     String control = "";
@@ -770,18 +771,15 @@ public class Gestor_Clientes {
                     do {
                         System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
                         control = scanner.nextLine();
-                        control = control.toUpperCase();
-                        codigo="";
                         try {
                             codigo=Validaciones.primera_letra(control);
                             c.setCodigoAcceso(control);
                         } catch (StringVacioException e) {
-
                             System.out.println(e.getMessage());
                             continue;
                         }
+                        break;
                     }while (true);
-
                 }
                 try {
                     menu_Administrador();
@@ -800,7 +798,8 @@ public class Gestor_Clientes {
 
             }
         }
-    public void eliminar_cliente() {
+    public void eliminar_cliente() throws IOException, Campos_no_válidos_Exception {
+
         Scanner scanner = new Scanner(System.in);
         File file = new File("data/Clientes");
         String email = "";
@@ -823,7 +822,7 @@ public class Gestor_Clientes {
 
         System.out.print("Ingrese el código de acceso: ");
         codigo = scanner.nextLine();
-
+        cargar_archivo();
         ArrayList<Cliente> clientes = getListado_de_clientes();
         Iterator<Cliente> iterator = clientes.iterator();
         while (iterator.hasNext()) {

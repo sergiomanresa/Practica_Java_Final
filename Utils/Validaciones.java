@@ -1,6 +1,7 @@
 package Practica_evaluacion.Utils;
 
 import Practica_evaluacion.excepcion.*;
+import Practica_evaluacion.interfaces.comprobar_fechas;
 
 /**
  * Clase para las validaciones
@@ -9,7 +10,7 @@ import Practica_evaluacion.excepcion.*;
  * @version 1.0
  * @since 11/01/2023
  */
-public class Validaciones {
+public class Validaciones implements comprobar_fechas {
         private static final int MIN_LENGTH = 8;
         private static final int MAX_LENGTH = 20;
 
