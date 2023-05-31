@@ -57,7 +57,8 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
      * @param clienteBuscar
      * @return cliente encontrado
      */
-    public boolean buscarCliente(Cliente clienteBuscar){
+    public boolean buscarCliente(Cliente clienteBuscar) throws IOException, Campos_no_válidos_Exception {
+        cargar_archivo();
         for(Cliente cliente : listado_de_clientes){
             if(cliente.getEmail().equals(clienteBuscar.getEmail())){
                 System.out.println("Cliente encontrado");
@@ -217,15 +218,17 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                 continue;
 
             }
+
             Cliente cliente = new Cliente(nombre, apellidos, email, telefono, dni,fechanacimiento,codigo);
-            cliente.formatearObjeto();
-            listado_de_clientes.add(cliente);
-            guardarClientesEnArchivo(listado_de_clientes);
-            System.out.println("Para logearte necesitaras el email: "+email+"\n"+"y el codigo: "+Validaciones.primera_letra(control));
-            break;
+                cliente.formatearObjeto();
+                if (!buscarCliente(cliente)) {
+                    listado_de_clientes.add(cliente);
+                    guardarClientesEnArchivo(listado_de_clientes);
+                    System.out.println("Para logearte necesitaras el email: " + email + "\n" + "y el codigo: " + Validaciones.primera_letra(control));
+                }
+                break;
         }while(true);
     }
-
     public void login_cliente() throws NumeroInvalidoException, IOException, Campos_no_válidos_Exception {
         String opcion = "";
         Cliente cliente = new Cliente();
@@ -528,7 +531,6 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
      * @throws ArrayHabitacionesVacioException
      */
     public void guardarRegistros() throws IOException, ArrayHabitacionesVacioException{
-        //todo cambiar la ruta
         FileWriter fw = new FileWriter("data/Cliente", false);
         if(listado_de_clientes.size() > 0){
             for(Cliente c : listado_de_clientes){
@@ -598,7 +600,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
         }
     }
     public void menu_Administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         String opcion="";
         char caso = ' ';
         System.out.println("------ Menu de gestión de clientes ------");
@@ -608,7 +610,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
         System.out.println("4. Eliminar cliente");
         System.out.println("5. Regresar al menú anterior");
         System.out.println("Elige una option:");
-        opcion = scanner.nextLine();
+        opcion = sc.nextLine();
         if (opcion.length() == 1)
             caso = opcion.charAt(0);
         else {
@@ -632,8 +634,12 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                 menu_Administrador();
                 break;
             case '5':
-                Main.mostrarMenu(scanner);
+                Main.mostrarMenu(sc);
+                break;
+            default:
+                menu_Administrador();
         }
+
     }
 
     /**
@@ -660,6 +666,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
             }
             break;
         }while (true);
+
         System.out.println("Dime el codigo de acceso:");
         codigo=scanner.nextLine();
         cargar_archivo();
@@ -685,20 +692,6 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                     String fechanacimiento="";
 
                     System.out.println("------ Menu de edición de clientes ------");
-                    do {
-                        System.out.println("DNI:");
-                        dni=scanner.nextLine();
-                        dni=dni.toUpperCase();
-
-                        try{
-                            Validaciones.dni(dni);
-                            c.setDni(dni);
-                        }catch (Formato_dni_Exception e){
-                            System.out.printf(e.getMessage());
-                            continue;
-                        }
-                        break;
-                    }while (true);
                     do {
                         System.out.println("Nombre:");
                         nombre=scanner.nextLine();
@@ -756,19 +749,6 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                         break;
                     }while (true);
                     do {
-                        System.out.println("Fecha de nacimiento (dd/mm/aaaa) o (dd-mm-aaaa):");
-                        fechanacimiento= scanner.nextLine();
-                        try{
-                            Validaciones.fechaCorrecta(fechanacimiento);
-                            c.setFechaNacimiento(fechanacimiento);
-                        }catch (FormatoFechaNoValidoException e){
-                            System.out.println(e.getMessage());
-                            continue;
-                        }
-                        break;
-
-                    }while (true);
-                    do {
                         System.out.println("Frase de control (4 palabras separadas por 1 espacio cada palabra):");
                         control = scanner.nextLine();
                         try {
@@ -802,6 +782,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
 
         Scanner scanner = new Scanner(System.in);
         File file = new File("data/Clientes");
+        cargar_archivo();
         String email = "";
         String codigo = "";
         String opcion = "";
@@ -834,7 +815,6 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                 break;
             }
         }
-
         if (!usuario_existente) {
             System.out.print("No se ha encontrado ningún usuario que coincida, ¿desea seguir intentándolo? (S/N): ");
             opcion = scanner.nextLine();
@@ -851,15 +831,4 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
             System.out.println("Error al guardar los cambios en el archivo.");
         }
     }
-
-
-
-
-
-
-
-
 }
-
-
-

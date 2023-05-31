@@ -78,10 +78,12 @@ public class Main {
                     break;
                 case '2':
                     try {
-                        gestorClientes.login_cliente();
+                        try {
+                            gestorClientes.login_cliente();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     } catch (NumeroInvalidoException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
                         throw new RuntimeException(e);
                     } catch (Campos_no_válidos_Exception e) {
                         throw new RuntimeException(e);
