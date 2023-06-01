@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Administrador extends Usuario {
     private boolean activo;
@@ -81,27 +80,4 @@ public class Administrador extends Usuario {
 
         return false; // Las credenciales son inválidas
 }
-    public void Crud_administrador(){
-        char caso = ' ';
-        String opcion="";
-        Scanner sc =new Scanner(System.in);
-        System.out.println("-------Menu crud administrador-------");
-        System.out.println("1. Gestion clientes");
-        System.out.println("2. Gestionar reservas");
-        System.out.println("5. Volver al menu principal");
-        System.out.println("0. Salir de la aplicación");
-        opcion = sc.nextLine();
-        if (opcion.length() == 1)
-            caso = opcion.charAt(0);
-        else {
-            System.out.println("Opción inválida");
-            Crud_administrador();
-            return;
-        }
-        switch (caso){
-            
-        }
-    }
-
-
 }

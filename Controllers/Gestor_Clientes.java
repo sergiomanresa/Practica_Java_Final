@@ -6,10 +6,10 @@ package Practica_evaluacion.Controllers;
  * @version 1.0
  * @since 11/01/2023
  */
+
 import Practica_evaluacion.Main;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.*;
-import Practica_evaluacion.interfaces.disponibilidad_de_habitaciones;
 import Practica_evaluacion.models.Administrador;
 import Practica_evaluacion.models.Cliente;
 import Practica_evaluacion.models.Habitacion;
@@ -20,10 +20,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static Practica_evaluacion.Main.mostrarMenu;
 import static Practica_evaluacion.models.Administrador.agregarAdministrador;
+import static Practica_evaluacion.models.Habitacion.menu_habitacion;
+import static Practica_evaluacion.models.Reservas.buscarReservaPorCodigo;
+import static java.lang.System.exit;
 
 public class Gestor_Clientes{
+
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
+    ArrayList<Habitacion> habitaciones = new ArrayList<>();
 
     public Gestor_Clientes() {
 
@@ -643,7 +649,7 @@ public class Gestor_Clientes{
                 menu_Administrador();
                 break;
             case '5':
-                Main.mostrarMenu(sc);
+                mostrarMenu(sc);
                 break;
             default:
                 menu_Administrador();
@@ -788,7 +794,7 @@ public class Gestor_Clientes{
             }
 
         }
-        }
+    }
 
 
     public void eliminar_cliente() throws IOException, Campos_no_válidos_Exception {
@@ -860,10 +866,66 @@ public class Gestor_Clientes{
 
         if (inicioSesionExitoso) {
             System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
-            menu_Administrador();
+            Crud_administrador();
         } else {
             System.out.println("Credenciales inválidas. Inicio de sesión fallido.");
             login_administrador();
+        }
+    }
+    public void Crud_administrador(){
+        char caso = ' ';
+        String opcion="";
+        Scanner sc =new Scanner(System.in);
+        System.out.println("-------Menu crud administrador-------");
+        System.out.println("1. Gestion clientes");
+        System.out.println("2. Gestionar reservas");
+        System.out.println("3. Gestion habitaciones");
+        System.out.println("4. Volver al menu principal");
+        System.out.println("0. Salir de la aplicación");
+        opcion = sc.nextLine();
+        if (opcion.length() == 1)
+            caso = opcion.charAt(0);
+        else {
+            System.out.println("Opción inválida");
+            Crud_administrador();
+            return;
+        }
+        switch (caso){
+            case '1':
+                try {
+                    menu_Administrador();
+                } catch (StringVacioException e) {
+                    throw new RuntimeException(e);
+                } catch (FormatoFechaNoValidoException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ArrayHabitacionesVacioException e) {
+                    throw new RuntimeException(e);
+                } catch (Campos_no_válidos_Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case '2':
+                buscarReservaPorCodigo();
+                break;
+
+            case '3':
+                menu_habitacion(habitaciones);
+                break;
+            case '4':
+                mostrarMenu(sc);
+                break;
+            case '5':
+                System.out.println("Saliendo...");
+                exit(0);
+                break;
+            default:
+                System.out.println("Opción inválida");
+                Crud_administrador();
+                return;
+
+
         }
     }
     }

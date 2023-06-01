@@ -1,13 +1,13 @@
 package Practica_evaluacion.models;
 
-import Practica_evaluacion.excepcion.ArrayHabitacionesVacioException;
-import Practica_evaluacion.excepcion.Campos_no_válidos_Exception;
+import Practica_evaluacion.Main;
+import Practica_evaluacion.Utils.Validaciones;
+import Practica_evaluacion.excepcion.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Clase para las reservas
@@ -75,10 +75,31 @@ public class Reservas {
     public String formatearObjeto(){
         return cod + ";"+ id_cliente +";" + id_habitacion+";" + fecha_entrada + ";"+fecha_salida+";";
     }
+    public static Reservas buscarReserva(int codigo) {
+        for (Reservas reserva : reservas) {
+            if (reserva.getCod() == codigo) {
+                return reserva;
+            }
+        }
+        return null;
+    }
+    public void eliminarReserva() {
+        reservas.remove(this);
+        System.out.println("La reserva con código " + cod + " ha sido eliminada.");
+    }
+    public  void actualizarReserva(int nuevoCod, String nuevoIdCliente, ArrayList<Integer> nuevoIdHabitacion, String nuevaFechaEntrada, String nuevaFechaSalida) {
+        setCod(nuevoCod);
+        setId_cliente(nuevoIdCliente);
+        setId_habitacion(nuevoIdHabitacion);
+        setFecha_entrada(nuevaFechaEntrada);
+        setFecha_salida(nuevaFechaSalida);
+        System.out.println("La reserva con código " + cod + " ha sido actualizada.");
+    }
+
 
     public  void escribirEnArchivo(String datos) {
         try {
-            FileWriter writer = new FileWriter("C:\\Users\\zancr\\IdeaProjects\\proyecto\\src\\Practica_evaluacion\\data\\reservas",true);
+            FileWriter writer = new FileWriter("data/reservas",true);
             writer.write(datos);
             writer.close();
             System.out.println("Datos de reserva escritos en el archivo.");
@@ -86,7 +107,82 @@ public class Reservas {
             System.out.println("Error al escribir en el archivo: " + e.getMessage());
         }
     }
+    private static ArrayList<Reservas> reservas = new ArrayList<>();
 
+    // ... (Otros métodos y funcionalidades de gestión de reservas)
+
+    public static void buscarReservaPorCodigo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Ingrese el código de la reserva:");
+        int codigo = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
+
+        Reservas reservaEncontrada = buscarReserva(codigo);
+        if (reservaEncontrada != null) {
+            System.out.println("Reserva encontrada:");
+            System.out.println("Código: " + reservaEncontrada.getCod());
+            System.out.println("Cliente: " + reservaEncontrada.getId_cliente());
+            System.out.println("Habitación: " + reservaEncontrada.getId_habitacion());
+            System.out.println("Fecha de entrada: " + reservaEncontrada.getFecha_entrada());
+            System.out.println("Fecha de salida: " + reservaEncontrada.getFecha_salida());
+            System.out.println("-----------------------------");
+
+            // Menú de opciones
+            System.out.println("Seleccione una opción:");
+            System.out.println("1. Eliminar reserva");
+            System.out.println("2. Actualizar reserva");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer
+
+            switch (opcion) {
+                case 1:
+                    reservaEncontrada.eliminarReserva();
+                    guardarReservasEnArchivo();
+                    break;
+                case 2:
+                    System.out.println("Ingrese el nuevo código:");
+                    int nuevoCod = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer
+
+                    System.out.println("Ingrese el nuevo ID del cliente:");
+                    String nuevoIdCliente = scanner.nextLine();
+
+                    System.out.println("Ingrese el nuevo ID de la habitación:");
+                    ArrayList<Integer> nuevoIdHabitacion = new ArrayList<>();
+                    // Lógica para leer y almacenar los IDs de las habitaciones, puedes adaptarla según tus necesidades
+
+                    System.out.println("Ingrese la nueva fecha de entrada:");
+                    String nuevaFechaEntrada = scanner.nextLine();
+
+                    System.out.println("Ingrese la nueva fecha de salida:");
+                    String nuevaFechaSalida = scanner.nextLine();
+
+                    reservaEncontrada.actualizarReserva(nuevoCod, nuevoIdCliente, nuevoIdHabitacion, nuevaFechaEntrada, nuevaFechaSalida);
+                    guardarReservasEnArchivo();
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
+        } else {
+            System.out.println("No se encontró ninguna reserva con ese código.");
+        }
+    }
+
+    public static void guardarReservasEnArchivo() {
+        try {
+            FileWriter writer = new FileWriter("data/reservas");
+            for (Reservas reserva : reservas) {
+                writer.write(reserva.formatearObjeto() + "\n");
+            }
+            writer.close();
+            System.out.println("Reservas actualizadas guardadas en el archivo.");
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo: " + e.getMessage());
+        }
+    }
 
 
 }
+
+
