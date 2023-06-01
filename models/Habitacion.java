@@ -1,4 +1,6 @@
 package Practica_evaluacion.models;
+import Practica_evaluacion.Utils.Validaciones;
+import Practica_evaluacion.excepcion.NumeroInvalidoException;
 import Practica_evaluacion.interfaces.disponibilidad_de_habitaciones;
 
 import java.io.FileWriter;
@@ -239,7 +241,12 @@ public class Habitacion implements disponibilidad_de_habitaciones {
         }
     }
 
-    public static void menu_habitacion(ArrayList<Habitacion> habitaciones) {
+    public static void menu_habitacion(ArrayList<Habitacion> habitaciones) throws NumeroInvalidoException {
+        String nuevoNombre;
+        String nuevaDescripcion;
+        String nuevoNumCamas;
+        String nuevoMaxPersonas;
+        String nuevoPrecio;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Ingrese el ID de la habitación:");
         int id = scanner.nextInt();
@@ -269,29 +276,37 @@ public class Habitacion implements disponibilidad_de_habitaciones {
                     guardarHabitacionesEnArchivo(habitaciones);
                     break;
                 case 2:
-                    System.out.println("Ingrese el nuevo nombre:");
-                    String nuevoNombre = scanner.nextLine();
+                    do {
+                        System.out.println("Ingrese el nuevo nombre:");
+                        nuevoNombre = scanner.nextLine();
+                    } while (Validaciones.numerocorrecto(nuevoNombre));
 
-                    System.out.println("Ingrese la nueva descripción:");
-                    String nuevaDescripcion = scanner.nextLine();
+                    do {
+                        System.out.println("Ingrese la nueva descripción:");
+                        nuevaDescripcion = scanner.nextLine();
+                    } while (!Validaciones.noTieneNada(nuevaDescripcion));
 
-                    System.out.println("Ingrese el nuevo número de camas:");
-                    int nuevoNumCamas = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    System.out.println("Ingrese el nuevo número máximo de personas:");
-                    int nuevoMaxPersonas = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    System.out.println("Ingrese el nuevo precio:");
-                    double nuevoPrecio = scanner.nextDouble();
-                    scanner.nextLine(); // Limpiar el buffer
+                    do {
+                        System.out.println("Ingrese el nuevo número de camas:");
+                        nuevoNumCamas = scanner.nextLine();
+                    } while (!Validaciones.solo_numero(nuevoNumCamas) || !Validaciones.noTieneNada(nuevoNumCamas));
+                        int numCamas = Integer.parseInt(nuevoNumCamas);
+                    do {
+                        System.out.println("Ingrese el nuevo número máximo de personas:");
+                        nuevoMaxPersonas = scanner.nextLine();
+                    } while (!Validaciones.noTieneNada(nuevoMaxPersonas) || !Validaciones.solo_numero(nuevoMaxPersonas));
+                    int maxPersonas = Integer.parseInt(nuevoMaxPersonas);
+                    do {
+                        System.out.println("Ingrese el nuevo precio:");
+                        nuevoPrecio = scanner.nextLine();
+                    } while (!Validaciones.noTieneNada(nuevoPrecio) || !Validaciones.solo_numero(nuevoPrecio));
+                    int precio = Integer.parseInt(nuevoPrecio);
 
                     habitacionEncontrada.setNombre(nuevoNombre);
                     habitacionEncontrada.setDescripcion(nuevaDescripcion);
-                    habitacionEncontrada.setNum_camas(nuevoNumCamas);
-                    habitacionEncontrada.setMax_personas(nuevoMaxPersonas);
-                    habitacionEncontrada.setPrecio(nuevoPrecio);
+                    habitacionEncontrada.setNum_camas(numCamas);
+                    habitacionEncontrada.setMax_personas(maxPersonas);
+                    habitacionEncontrada.setPrecio(precio);
 
                     guardarHabitacionesEnArchivo(habitaciones);
                     break;

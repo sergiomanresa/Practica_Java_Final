@@ -902,7 +902,11 @@ public class Gestor_Clientes{
                 break;
 
             case '3':
-                menu_habitacion(habitaciones);
+                try {
+                    menu_habitacion(habitaciones);
+                } catch (NumeroInvalidoException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case '4':
                 mostrarMenu(sc);
