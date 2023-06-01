@@ -22,7 +22,7 @@ import java.util.*;
 
 import static Practica_evaluacion.models.Administrador.agregarAdministrador;
 
-public class Gestor_Clientes implements disponibilidad_de_habitaciones {
+public class Gestor_Clientes{
     private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
 
     public Gestor_Clientes() {
@@ -243,7 +243,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
         char caso = ' ';
         boolean usuarioLogueado = false;
         Scanner sc = new Scanner(System.in);
-
+        System.out.println("------- Login clientes -------");
         System.out.println("Dime tu email de usuario:");
         String email_usuario = sc.nextLine();
         System.out.println("Dime tu código:");
@@ -763,7 +763,7 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
                         control = scanner.nextLine();
                         try {
                             codigo=Validaciones.primera_letra(control);
-                            c.setCodigoAcceso(control);
+                            c.setCodigoAcceso(codigo);
                         } catch (StringVacioException e) {
                             System.out.println(e.getMessage());
                             continue;
@@ -845,4 +845,25 @@ public class Gestor_Clientes implements disponibilidad_de_habitaciones {
         }
         guardarClientesEnArchivo(listado_de_clientes);
     }
-}
+
+    public void login_administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-------Login administrador------- ");
+
+        System.out.print("Ingrese su email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Ingrese su contraseña: ");
+        String contraseña = scanner.nextLine();
+
+        boolean inicioSesionExitoso = Administrador.verificarInicioSesion(email, contraseña);
+
+        if (inicioSesionExitoso) {
+            System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
+            menu_Administrador();
+        } else {
+            System.out.println("Credenciales inválidas. Inicio de sesión fallido.");
+            login_administrador();
+        }
+    }
+    }

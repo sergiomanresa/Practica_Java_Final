@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 
 public class Main {
         public static void mostrarMenu(Scanner scanner){
@@ -29,11 +31,11 @@ public class Main {
             System.out.println("1. Registro usuario");
             System.out.println("2. Login usuario");
             System.out.println("3. Registro administrador");
-            System.out.println("4. menu gestion");
+            System.out.println("4. login administrador");
             System.out.println("0. Salir");
             System.out.println("Opción en número:");
 
-             opcion = scanner.nextLine();
+            opcion = scanner.nextLine();
             if (opcion.length() == 1)
                 caso = opcion.charAt(0);
             else {
@@ -99,22 +101,25 @@ public class Main {
                     }
                     break;
                 case '4':
-                    try {
-                        gestorClientes.menu_Administrador();
-                    } catch (StringVacioException e) {
-                        throw new RuntimeException(e);
-                    } catch (FormatoFechaNoValidoException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (ArrayHabitacionesVacioException e) {
-                        throw new RuntimeException(e);
-                    } catch (Campos_no_válidos_Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                        try {
+                            gestorClientes.login_administrador();
+                        } catch (StringVacioException e) {
+                            throw new RuntimeException(e);
+                        } catch (FormatoFechaNoValidoException e) {
+                            throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (ArrayHabitacionesVacioException e) {
+                            throw new RuntimeException(e);
+                        } catch (Campos_no_válidos_Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
                 case '0':
                     System.out.println("Saliendo...");
-                    return;
+                    exit(0);
+
+
                 default:
                     System.out.println("Opción inválida");
                     mostrarMenu(scanner);

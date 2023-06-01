@@ -1,15 +1,22 @@
 package Practica_evaluacion.models;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Administrador extends Usuario {
     private boolean activo;
 
-    public Administrador(String nombreUsuario, String password, String email, boolean activo) {
-        super(nombreUsuario, password, email, true);
+    public Administrador(String nombreUsuario, String Paasword, String email, boolean activo) {
+        super(nombreUsuario, Paasword, email, true);
         this.activo = activo;
+    }
+
+    public Administrador() {
     }
 
     public boolean isActivo() {
@@ -39,4 +46,62 @@ public class Administrador extends Usuario {
             System.out.println("Error al guardar los administradores en el archivo.");
         }
     }
+
+    public static List<Administrador> cargarAdministradoresDesdeArchivo() {
+        List<Administrador> administradores = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_ADMINISTRADORES))) {
+            String linea;
+
+            while ((linea = reader.readLine()) != null) {
+                String[] partes = linea.split(",");
+                String nombre = partes[0];
+                String dni = partes[1];
+                String email = partes[2];
+                boolean activo = Boolean.parseBoolean(partes[3]);
+
+                Administrador administrador = new Administrador(nombre, dni, email, activo);
+                administradores.add(administrador);
+            }
+        } catch (IOException e) {
+            System.out.println("Error al cargar los administradores desde el archivo.");
+        }
+
+        return administradores;
+    }
+    // Verificar el inicio de sesión de un administrador
+    public static boolean verificarInicioSesion(String email, String Paasword) {
+        List<Administrador> administradores = cargarAdministradoresDesdeArchivo();
+
+        for (Administrador administrador : administradores) {
+            if (administrador.getEmail().equals(email) && administrador.getPassword().equals(Paasword)) {
+                return true; // Las credenciales son válidas
+            }
+        }
+
+        return false; // Las credenciales son inválidas
+}
+    public void Crud_administrador(){
+        char caso = ' ';
+        String opcion="";
+        Scanner sc =new Scanner(System.in);
+        System.out.println("-------Menu crud administrador-------");
+        System.out.println("1. Gestion clientes");
+        System.out.println("2. Gestionar reservas");
+        System.out.println("5. Volver al menu principal");
+        System.out.println("0. Salir de la aplicación");
+        opcion = sc.nextLine();
+        if (opcion.length() == 1)
+            caso = opcion.charAt(0);
+        else {
+            System.out.println("Opción inválida");
+            Crud_administrador();
+            return;
+        }
+        switch (caso){
+            
+        }
+    }
+
+
 }

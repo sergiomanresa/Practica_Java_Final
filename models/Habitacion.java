@@ -1,4 +1,6 @@
 package Practica_evaluacion.models;
+import Practica_evaluacion.interfaces.disponibilidad_de_habitaciones;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 11/01/2023
  */
-public class Habitacion {
+public class Habitacion implements disponibilidad_de_habitaciones {
     private int id;
     private String nombre;
     private String descripcion;

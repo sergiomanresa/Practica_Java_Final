@@ -4,4 +4,5 @@ public interface disponibilidad_de_habitaciones {
     public static boolean disponibilidad(){
         return true;
     }
+    String rangoFecha = null;
 }
