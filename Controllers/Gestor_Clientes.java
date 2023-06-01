@@ -7,7 +7,6 @@ package Practica_evaluacion.Controllers;
  * @since 11/01/2023
  */
 
-import Practica_evaluacion.Main;
 import Practica_evaluacion.Utils.Validaciones;
 import Practica_evaluacion.excepcion.*;
 import Practica_evaluacion.models.Administrador;
@@ -313,7 +312,7 @@ public class Gestor_Clientes{
                     }
                 } while (!todoCorrecto);
 
-				 {
+				 do {
 					System.out.println("¿Cuál es la fecha de entrada?");
 					fechaEntrada = sc.nextLine();
 					System.out.println("¿Cuál es la fecha de salida?");
@@ -601,17 +600,7 @@ public class Gestor_Clientes{
         opcion=scanner.nextLine();
         opcion=opcion.toUpperCase();
         if (opcion.equals("S")){
-            try {
-                menu_Administrador();
-            } catch (FormatoFechaNoValidoException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ArrayHabitacionesVacioException e) {
-                throw new RuntimeException(e);
-            } catch (Campos_no_válidos_Exception e) {
-                throw new RuntimeException(e);
-            }
+            Crud_administrador();
         }
     }
     public void menu_Administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
@@ -649,7 +638,7 @@ public class Gestor_Clientes{
                 menu_Administrador();
                 break;
             case '5':
-                mostrarMenu(sc);
+                Crud_administrador();
                 break;
             default:
                 menu_Administrador();
@@ -792,16 +781,15 @@ public class Gestor_Clientes{
                     throw new RuntimeException(e);
                 }
             }
-
         }
     }
 
 
     public void eliminar_cliente() throws IOException, Campos_no_válidos_Exception {
-
+        cargar_archivo();
         Scanner scanner = new Scanner(System.in);
         File file = new File("data/Cliente");
-        cargar_archivo();
+
         String email = "";
         String codigo = "";
         String opcion = "";
@@ -822,13 +810,13 @@ public class Gestor_Clientes{
 
         System.out.print("Ingrese el código de acceso: ");
         codigo = scanner.nextLine();
-        cargar_archivo();
+
         ArrayList<Cliente> clientes = getListado_de_clientes();
         Iterator<Cliente> iterator = clientes.iterator();
         while (iterator.hasNext()) {
             Cliente c = iterator.next();
             if (c.getEmail().equals(email) && c.getCodigoAcceso().equals(codigo)) {
-                System.out.println("adios, " + c.getNombre());
+                System.out.println("Adiós, " + c.getNombre());
                 iterator.remove(); // Eliminar el cliente de la lista
                 usuario_existente = true;
                 break;
@@ -841,16 +829,19 @@ public class Gestor_Clientes{
                 eliminar_cliente();
             } else {
                 System.out.println("Saliendo...");
+                return;
             }
         }
+
         // Guardar la lista actualizada de clientes en el archivo
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             outputStream.writeObject(clientes);
+            System.out.println("Cambios guardados en el archivo.");
         } catch (IOException e) {
-            System.out.println("Error al guardar los cambios en el archivo.");
+            System.out.println("Error al guardar los cambios en el archivo: " + e.getMessage());
         }
-        guardarClientesEnArchivo(listado_de_clientes);
     }
+
 
     public void login_administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
         Scanner scanner = new Scanner(System.in);
@@ -924,8 +915,6 @@ public class Gestor_Clientes{
                 System.out.println("Opción inválida");
                 Crud_administrador();
                 return;
-
-
         }
     }
     }

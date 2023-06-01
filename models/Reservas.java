@@ -112,10 +112,19 @@ public class Reservas {
     // ... (Otros métodos y funcionalidades de gestión de reservas)
 
     public static void buscarReservaPorCodigo() {
+        String nuevoCod="";
+        String _codigo="";
+        String nuevoIdCliente="";
+        String nuevaFechaEntrada="";
+        String nuevaFechaSalida="";
+        ArrayList<Integer> nuevoIdHabitacion;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Ingrese el código de la reserva:");
-        int codigo = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer
+        do {
+            System.out.println("Ingrese el código de la reserva:");
+            _codigo = scanner.nextLine();
+            scanner.nextLine(); // Limpiar el buffer
+        } while (!Validaciones.solo_numero(String.valueOf(_codigo)) || !Validaciones.noTieneNada(String.valueOf(_codigo)));
+        int codigo = Integer.parseInt(_codigo);
 
         Reservas reservaEncontrada = buscarReserva(codigo);
         if (reservaEncontrada != null) {
@@ -140,28 +149,38 @@ public class Reservas {
                     guardarReservasEnArchivo();
                     break;
                 case 2:
-                    System.out.println("Ingrese el nuevo código:");
-                    int nuevoCod = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
+                    do {
+                        System.out.println("Ingrese el nuevo código:");
+                         nuevoCod = scanner.nextLine();
+                        scanner.nextLine(); // Limpiar el buffer
+                    }while (!Validaciones.solo_numero(nuevoCod) || !Validaciones.noTieneNada(nuevoCod));
+                    int _nuevoCod = Integer.parseInt(nuevoCod);
 
-                    System.out.println("Ingrese el nuevo ID del cliente:");
-                    String nuevoIdCliente = scanner.nextLine();
+                    do {
+                        System.out.println("Ingrese el nuevo ID del cliente:");
+                         nuevoIdCliente = scanner.nextLine();
+                    }while (!Validaciones.noTieneNada(nuevoIdCliente) || !Validaciones.solo_numero(nuevoCod));
 
-                    System.out.println("Ingrese el nuevo ID de la habitación:");
-                    ArrayList<Integer> nuevoIdHabitacion = new ArrayList<>();
-                    // Lógica para leer y almacenar los IDs de las habitaciones, puedes adaptarla según tus necesidades
 
-                    System.out.println("Ingrese la nueva fecha de entrada:");
-                    String nuevaFechaEntrada = scanner.nextLine();
+                    do {
+                        System.out.println("Ingrese el nuevo ID de la habitación:");
+                        nuevoIdHabitacion = new ArrayList<>();
+                    }while (!Validaciones.noTieneNada(nuevoIdCliente) || !Validaciones.solo_numero(nuevoCod));
 
-                    System.out.println("Ingrese la nueva fecha de salida:");
-                    String nuevaFechaSalida = scanner.nextLine();
+                    do {
+                        System.out.println("¿Cuál es la fecha de entrada?");
+                        nuevaFechaEntrada = scanner.nextLine();
+                        System.out.println("¿Cuál es la fecha de salida?");
+                        nuevaFechaSalida = scanner.nextLine();
+                    } while (!Validaciones.fechaentrada_salida(nuevaFechaEntrada) || !Validaciones.fechaentrada_salida(nuevaFechaSalida));
 
-                    reservaEncontrada.actualizarReserva(nuevoCod, nuevoIdCliente, nuevoIdHabitacion, nuevaFechaEntrada, nuevaFechaSalida);
+
+                    reservaEncontrada.actualizarReserva(_nuevoCod, nuevoIdCliente, nuevoIdHabitacion, nuevaFechaEntrada, nuevaFechaSalida);
                     guardarReservasEnArchivo();
                     break;
                 default:
                     System.out.println("Opción inválida.");
+                    buscarReservaPorCodigo();
                     break;
             }
         } else {
