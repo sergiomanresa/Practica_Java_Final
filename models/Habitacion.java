@@ -1,12 +1,9 @@
 package Practica_evaluacion.models;
-import Practica_evaluacion.Utils.Validaciones;
-import Practica_evaluacion.excepcion.NumeroInvalidoException;
+
+import Practica_evaluacion.Controllers.Gestor_Clientes;
 import Practica_evaluacion.interfaces.disponibilidad_de_habitaciones;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Clase para las habitaciones
@@ -16,27 +13,28 @@ import java.util.Scanner;
  * @since 11/01/2023
  */
 public class Habitacion implements disponibilidad_de_habitaciones {
+    Gestor_Clientes gc=new Gestor_Clientes();
     private int id;
     private String nombre;
     private String descripcion;
     private int num_camas;
     private int max_personas;
-    private boolean ocupada;
-    private String fechasOcupadas="";
+    private static boolean ocupada;
+
+    private String fechasOcupadas = "";
     private double precio;
 
-    public Habitacion() {
-    }
-
-    public Habitacion(int id, String nombre, String descripcion, int num_camas, int max_personas, double precio) {
+    public Habitacion(int id, String nombre, String descripcion, int numCamas, int maxPersonas, double precio,boolean ocupada) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.num_camas = num_camas;
         this.max_personas = max_personas;
-        this.ocupada = ocupada;
-        this.fechasOcupadas = fechasOcupadas;
         this.precio = precio;
+        this.ocupada = ocupada;
+    }
+
+    public Habitacion(int id, String nombre, String descripcion, int numCamas, int maxPersonas, double precio) {
     }
 
     public int getId() {
@@ -106,11 +104,13 @@ public class Habitacion implements disponibilidad_de_habitaciones {
 
     /**
      * Devuelve un String que contiene todos los atributos del objeto separados por ;
-     * @return String con los atributos separados por ;
+     * @return String con los atributos separados por ,
      */
-    public String formatearObjeto(){
-        return ";"+id + ";"+ nombre + ";" + descripcion + ";" + num_camas + ";" + max_personas + ";" + precio+"\n";
+    public String formatearObjeto() {
+        String disponibleString = Boolean.toString(ocupada);
+        return id + "," + nombre + "," + descripcion + "," + num_camas + "," + max_personas + "," + precio + "," + disponibleString + "\n";
     }
+
 
     /**
 	 * Devuelve un ArrayList con los ID's que contiene la opción que ha elegido el usuario
@@ -121,26 +121,28 @@ public class Habitacion implements disponibilidad_de_habitaciones {
         ArrayList<Integer> aIds = new ArrayList<>();
 
         if (ids.contains(",")) {
-            int coma = ids.indexOf(',');
-            aIds.add(Integer.parseInt(ids.substring(0, coma)));
-            aIds.add(Integer.parseInt(ids.substring(coma + 1, ids.length())));
-        } else {
-
+            String[] idArray = ids.split(",");
+            for (String id : idArray) {
+                aIds.add(Integer.parseInt(id.trim()));
+            }
+        } else if (!ids.isEmpty()) {
+            aIds.add(Integer.parseInt(ids.trim()));
         }
 
         return aIds;
     }
+
     /**
      * Genera 5 habitaciones por defecto y te las devuelve en un ArrayList
      * @return habitaciones base
      */
-    public static ArrayList<Habitacion> generarHabitacionesBase(){
+    public static ArrayList<Habitacion> generarHabitacionesBase() {
         ArrayList<Habitacion> habitaciones = new ArrayList<>();
-        habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A1", "habitacion con vistas a la ciudad", 4, 8, 80.50));
-        habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A2", "habitacion con vistas a la piscina", 2, 3, 40.75));
-        habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A3", "habitacion con vistas al campo", 1, 1, 70.00));
-        habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A4", "habitacion con vistas a un descampado", 2, 4, 75.00));
-        habitaciones.add(new Habitacion((int)(Math.random()*1000+1), "A5", "habitacion con vistas a la montaña", 3, 5, 60.30));
+        habitaciones.add(new Habitacion(1, "A1", "pequeña", 1, 1, 12.0, false));
+        habitaciones.add(new Habitacion(2, "A2", "mediana", 2, 2, 24.0, false));
+        habitaciones.add(new Habitacion(3, "A3", "grande", 3, 3, 36.0, false));
+        habitaciones.add(new Habitacion(4, "A4", "vista montaña", 2, 4, 48.0, false));
+        habitaciones.add(new Habitacion(5, "A5", "vistas a carmona", 2, 5, 100.0, false));
         return habitaciones;
     }
     /**
@@ -213,112 +215,5 @@ public class Habitacion implements disponibilidad_de_habitaciones {
         }
         return true;
     }
-
-    public static Habitacion buscarHabitacion(int id, ArrayList<Habitacion> habitaciones) {
-        for (Habitacion habitacion : habitaciones) {
-            if (habitacion.getId() == id) {
-                return habitacion;
-            }
-        }
-        return null;
-    }
-
-    public static void eliminarHabitacion(Habitacion habitacion, ArrayList<Habitacion> habitaciones) {
-        habitaciones.remove(habitacion);
-        System.out.println("Habitación eliminada correctamente.");
-    }
-
-    public static void guardarHabitacionesEnArchivo(ArrayList<Habitacion> habitaciones) {
-        try {
-            FileWriter writer = new FileWriter("data/habitaciones");
-            for (Habitacion habitacion : habitaciones) {
-                writer.write(habitacion.formatearObjeto());
-            }
-            writer.close();
-            System.out.println("Habitaciones actualizadas guardadas en el archivo.");
-        } catch (IOException e) {
-            System.out.println("Error al escribir en el archivo: " + e.getMessage());
-        }
-    }
-
-    public static void menu_habitacion(ArrayList<Habitacion> habitaciones) throws NumeroInvalidoException {
-        String nuevoNombre;
-        String nuevaDescripcion;
-        String nuevoNumCamas;
-        String nuevoMaxPersonas;
-        String nuevoPrecio;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Ingrese el ID de la habitación:");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer
-
-        Habitacion habitacionEncontrada = buscarHabitacion(id, habitaciones);
-        if (habitacionEncontrada != null) {
-            System.out.println("Habitación encontrada:");
-            System.out.println("ID: " + habitacionEncontrada.getId());
-            System.out.println("Nombre: " + habitacionEncontrada.getNombre());
-            System.out.println("Descripción: " + habitacionEncontrada.getDescripcion());
-            System.out.println("Número de camas: " + habitacionEncontrada.getNum_camas());
-            System.out.println("Máximo de personas: " + habitacionEncontrada.getMax_personas());
-            System.out.println("Precio: " + habitacionEncontrada.getPrecio());
-            System.out.println("-----------------------------");
-
-            // Menú de opciones
-            System.out.println("Seleccione una opción:");
-            System.out.println("1. Eliminar habitación");
-            System.out.println("2. Actualizar habitación");
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
-
-            switch (opcion) {
-                case 1:
-                    eliminarHabitacion(habitacionEncontrada, habitaciones);
-                    guardarHabitacionesEnArchivo(habitaciones);
-                    break;
-                case 2:
-                    do {
-                        System.out.println("Ingrese el nuevo nombre:");
-                        nuevoNombre = scanner.nextLine();
-                    } while (Validaciones.numerocorrecto(nuevoNombre));
-
-                    do {
-                        System.out.println("Ingrese la nueva descripción:");
-                        nuevaDescripcion = scanner.nextLine();
-                    } while (!Validaciones.noTieneNada(nuevaDescripcion));
-
-                    do {
-                        System.out.println("Ingrese el nuevo número de camas:");
-                        nuevoNumCamas = scanner.nextLine();
-                    } while (!Validaciones.solo_numero(nuevoNumCamas) || !Validaciones.noTieneNada(nuevoNumCamas));
-                        int numCamas = Integer.parseInt(nuevoNumCamas);
-                    do {
-                        System.out.println("Ingrese el nuevo número máximo de personas:");
-                        nuevoMaxPersonas = scanner.nextLine();
-                    } while (!Validaciones.noTieneNada(nuevoMaxPersonas) || !Validaciones.solo_numero(nuevoMaxPersonas));
-                    int maxPersonas = Integer.parseInt(nuevoMaxPersonas);
-                    do {
-                        System.out.println("Ingrese el nuevo precio:");
-                        nuevoPrecio = scanner.nextLine();
-                    } while (!Validaciones.noTieneNada(nuevoPrecio) || !Validaciones.solo_numero(nuevoPrecio));
-                    int precio = Integer.parseInt(nuevoPrecio);
-
-                    habitacionEncontrada.setNombre(nuevoNombre);
-                    habitacionEncontrada.setDescripcion(nuevaDescripcion);
-                    habitacionEncontrada.setNum_camas(numCamas);
-                    habitacionEncontrada.setMax_personas(maxPersonas);
-                    habitacionEncontrada.setPrecio(precio);
-
-                    guardarHabitacionesEnArchivo(habitaciones);
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-                    break;
-            }
-        } else {
-            System.out.println("No se encontró ninguna habitación con ese ID.");
-        }
-
-    }
-
 
 }

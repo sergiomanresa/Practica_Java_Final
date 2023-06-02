@@ -13,7 +13,6 @@ import Practica_evaluacion.models.Administrador;
 import Practica_evaluacion.models.Cliente;
 import Practica_evaluacion.models.Habitacion;
 import Practica_evaluacion.models.Reservas;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,14 +20,12 @@ import java.util.*;
 
 import static Practica_evaluacion.Main.mostrarMenu;
 import static Practica_evaluacion.models.Administrador.agregarAdministrador;
-import static Practica_evaluacion.models.Habitacion.menu_habitacion;
-import static Practica_evaluacion.models.Reservas.buscarReservaPorCodigo;
 import static java.lang.System.exit;
 
 public class Gestor_Clientes{
 
-    private ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
-    ArrayList<Habitacion> habitaciones = new ArrayList<>();
+    private static ArrayList<Cliente> listado_de_clientes = new ArrayList<>();
+    static ArrayList<Habitacion> habitaciones = new ArrayList<>();
 
     public Gestor_Clientes() {
 
@@ -42,7 +39,7 @@ public class Gestor_Clientes{
         this.listado_de_clientes = listado_de_clientes;
     }
 
-    public ArrayList<Cliente> getListado_de_clientes() {
+    public static ArrayList<Cliente> getListado_de_clientes() {
         return listado_de_clientes;
     }
 
@@ -62,7 +59,7 @@ public class Gestor_Clientes{
      * @param clienteBuscar
      * @return cliente encontrado
      */
-    public boolean buscarCliente(Cliente clienteBuscar) throws IOException, Campos_no_válidos_Exception {
+    public static boolean buscarCliente(Cliente clienteBuscar) throws IOException, Campos_no_válidos_Exception {
         cargar_archivo();
         for(Cliente cliente : listado_de_clientes){
             if(cliente.getEmail().equals(clienteBuscar.getEmail())){
@@ -98,7 +95,7 @@ public class Gestor_Clientes{
 
     }
 
-    public void guardarClientesEnArchivo( ArrayList<Cliente> listado_de_clientes) {
+    public static void guardarClientesEnArchivo(ArrayList<Cliente> listado_de_clientes) {
         try (FileWriter writer = new FileWriter("data/Cliente")) {
             for (Cliente cliente : listado_de_clientes) {
                 String linea = cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getEmail() + "," + cliente.getTelefono() + ","+ cliente.getDni()+","+cliente.getFechaNacimiento()+","+ cliente.getCodigoAcceso();
@@ -111,7 +108,7 @@ public class Gestor_Clientes{
     }
 
 
-    public void registro_clientes() throws FormatoFechaNoValidoException, StringVacioException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+    public static void registro_clientes() throws FormatoFechaNoValidoException, StringVacioException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
         Scanner scanner=new Scanner(System.in);
 
 
@@ -515,7 +512,7 @@ public class Gestor_Clientes{
         }
     }
 
-    private void cargar_archivo() throws IOException, Campos_no_válidos_Exception {
+    private static void cargar_archivo() throws IOException, Campos_no_válidos_Exception {
         FileReader fr = new FileReader("data/Cliente");
         BufferedReader br = new BufferedReader(fr);
 
@@ -603,7 +600,7 @@ public class Gestor_Clientes{
             Crud_administrador();
         }
     }
-    public void menu_Administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
+    public static void menu_Administrador() throws StringVacioException, FormatoFechaNoValidoException, IOException, ArrayHabitacionesVacioException, Campos_no_válidos_Exception {
         Scanner sc = new Scanner(System.in);
         String opcion="";
         char caso = ' ';
@@ -651,7 +648,7 @@ public class Gestor_Clientes{
      * El boolean sirve para permitir actualizar un cliente (true) o solo visualizarlo (false)
      * @param editar
      */
-    public void buscar_cliente(boolean editar) throws IOException, Campos_no_válidos_Exception {
+    public static void buscar_cliente(boolean editar) throws IOException, Campos_no_válidos_Exception {
         File file = new File("data/Cliente");
         String email="";
         String codigo="";
@@ -785,7 +782,7 @@ public class Gestor_Clientes{
     }
 
 
-    public void eliminar_cliente() throws IOException, Campos_no_válidos_Exception {
+    public static void eliminar_cliente() throws IOException, Campos_no_válidos_Exception {
         cargar_archivo();
         Scanner scanner = new Scanner(System.in);
         File file = new File("data/Cliente");
@@ -863,7 +860,7 @@ public class Gestor_Clientes{
             login_administrador();
         }
     }
-    public void Crud_administrador(){
+    public static void Crud_administrador(){
         char caso = ' ';
         String opcion="";
         Scanner sc =new Scanner(System.in);
@@ -898,15 +895,16 @@ public class Gestor_Clientes{
                 }
                 break;
             case '2':
-                buscarReservaPorCodigo();
+                Reservas.buscarReservaPor_id_cliente();
                 break;
 
             case '3':
                 try {
-                    menu_habitacion(habitaciones);
+                    Gestor_Habitaciones.menu_habitacion();
                 } catch (NumeroInvalidoException e) {
                     throw new RuntimeException(e);
                 }
+
                 break;
             case '4':
                 mostrarMenu(sc);

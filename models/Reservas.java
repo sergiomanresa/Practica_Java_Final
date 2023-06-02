@@ -75,13 +75,13 @@ public class Reservas {
     public String formatearObjeto(){
         return cod + ";"+ id_cliente +";" + id_habitacion+";" + fecha_entrada + ";"+fecha_salida+";";
     }
-    public static Reservas buscarReserva(int codigo) {
+    public static Reservas buscarReservaPorCliente(String idCliente) {
         for (Reservas reserva : reservas) {
-            if (reserva.getCod() == codigo) {
+            if (reserva.getId_cliente().equals(idCliente)) {
                 return reserva;
             }
         }
-        return null;
+        return null; // Si no se encuentra la reserva
     }
     public void eliminarReserva() {
         reservas.remove(this);
@@ -109,24 +109,24 @@ public class Reservas {
     }
     private static ArrayList<Reservas> reservas = new ArrayList<>();
 
-    // ... (Otros métodos y funcionalidades de gestión de reservas)
 
-    public static void buscarReservaPorCodigo() {
+    public static void buscarReservaPor_id_cliente() {
         String nuevoCod="";
         String _codigo="";
         String nuevoIdCliente="";
         String nuevaFechaEntrada="";
         String nuevaFechaSalida="";
+        String idCliente="";
         ArrayList<Integer> nuevoIdHabitacion;
         Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("Ingrese el código de la reserva:");
-            _codigo = scanner.nextLine();
-            scanner.nextLine(); // Limpiar el buffer
-        } while (!Validaciones.solo_numero(String.valueOf(_codigo)) || !Validaciones.noTieneNada(String.valueOf(_codigo)));
-        int codigo = Integer.parseInt(_codigo);
+            System.out.println("Ingrese el ID del cliente:");
+            nuevoIdCliente = scanner.nextLine();
+        } while (!Validaciones.noTieneNada(nuevoIdCliente) || !Validaciones.solo_numero(nuevoIdCliente));
 
-        Reservas reservaEncontrada = buscarReserva(codigo);
+         idCliente = String.valueOf(Integer.parseInt(nuevoIdCliente));
+
+        Reservas reservaEncontrada = buscarReservaPorCliente(String.valueOf(idCliente));
         if (reservaEncontrada != null) {
             System.out.println("Reserva encontrada:");
             System.out.println("Código: " + reservaEncontrada.getCod());
@@ -180,7 +180,7 @@ public class Reservas {
                     break;
                 default:
                     System.out.println("Opción inválida.");
-                    buscarReservaPorCodigo();
+                    buscarReservaPor_id_cliente();
                     break;
             }
         } else {
